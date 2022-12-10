@@ -5,3 +5,20 @@ format: html
 ---
 
 ## Hier entsteht eine Webpräsenz.
+
+## Test R:
+
+```{r}
+recursiveFactorial <- function(n) {
+  if (n==0) {
+    return(1)
+  }else{
+    return(n*recursiveFactorial(n-1))
+  }
+}
+
+recursiveFactorial <- Vectorize(recursiveFactorial)
+
+recursiveFactorial(1:10) |> plot(type="l",log='y')
+```
+
