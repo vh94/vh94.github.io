@@ -1,0 +1,39 @@
+---
+title: "Webpräsenz"
+author: "Valentin Haberl"
+format: html
+---
+
+# Factorial:
+
+The factorial of a non-negative integer $n$ , denoted by $n!$, is the product of all positive integers less than or equal to $n$.
+
+$$n! = \prod^{n}_{i=1}{i.}$$
+
+```{r}
+recursiveFactorial <-Vectorize( 
+  function(n) {
+  ifelse(n==0,1,n*recursiveFactorial(n-1))
+  }
+)
+
+recursiveFactorial(1:10) |> plot(type="l",log='y')
+```
+
+# Combinations:
+
+There are $n!$ different ways of arranging $n$ distinct objects into a sequence
+
+$$\binom nk=\frac{n!}{k!(n-k)!} \quad \textrm{for}\quad  0 \le k \le n,$$
+
+
+```{r}
+bin  <- function(n,k) {
+  recursiveFactorial(n)/(recursiveFactorial(k)*recursiveFactorial(n-k))
+}
+
+bases <- c("A","T","G","C")
+bin(length(bases),3)
+```
+
+`r combn(bases,3)|>knitr::kable()`
