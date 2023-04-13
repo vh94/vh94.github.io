@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "Rprogramming.html",
+    "href": "Rprogramming.html",
+    "title": "R Programming",
+    "section": "",
+    "text": "The factorial of a non-negative integer \\(n\\) , denoted by \\(n!\\), is the product of all positive integers less than or equal to \\(n\\).\n\\[n! = \\prod^{n}_{i=1}{i.}\\]\n\nrecursiveFactorial <-Vectorize( \n  function(n) {\n  ifelse(n==0,1,n*recursiveFactorial(n-1))\n  }\n)\n\nrecursiveFactorial(1:10) |> plot(type=\"l\",log='y')\n\n\n\n\n\n\n\nThere are \\(n!\\) different ways of arranging \\(n\\) distinct objects into a sequence\n\\[\\binom nk=\\frac{n!}{k!(n-k)!} \\quad \\textrm{for}\\quad  0 \\le k \\le n,\\]\n\nbin  <- function(n,k) {\n  recursiveFactorial(n)/(recursiveFactorial(k)*recursiveFactorial(n-k))\n}\n\nbases <- c(\"A\",\"T\",\"G\",\"C\")\nbin(length(bases),3)\n\n[1] 4\n\n\n\n\n\nA\nA\nA\nT\n\n\nT\nT\nG\nG\n\n\nG\nC\nC\nC"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "This is a personal Website containing thoughts about biology, programming and statistics.\nThe page is realized with quarto and hosted via github."
+  }
+]
