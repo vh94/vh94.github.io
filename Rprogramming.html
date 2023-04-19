@@ -303,35 +303,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <p>using apply here would have made the whole thing even slower :(</p>
 </blockquote>
-<p>Now the main function:</p>
+<p>Now the depth first search algorithm.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># depth first search</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>solve_sudoku <span class="ot">&lt;-</span> <span class="cf">function</span>(sudoku) {</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  solved <span class="ot">=</span> <span class="cn">FALSE</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  empty <span class="ot">=</span> <span class="fu">which</span>(sudoku <span class="sc">==</span> <span class="dv">0</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (solved <span class="sc">==</span> <span class="cn">FALSE</span>) {</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(N <span class="sc">==</span> <span class="fu">length</span>(empty)<span class="sc">+</span><span class="dv">1</span>){</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      solved <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> <span class="fu">M_ind</span>(empty[N]) </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(sudoku[empty[N]] <span class="sc">&lt;=</span> <span class="dv">9</span>){</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      sudoku[empty[N]] <span class="ot">=</span> sudoku[empty[N]] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      check <span class="ot">=</span> <span class="fu">is_valid</span>(<span class="at">X=</span>i[<span class="dv">1</span>],<span class="at">Y=</span>i[<span class="dv">2</span>],<span class="at">board=</span>sudoku,<span class="at">boxes =</span> boxes)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(sudoku[empty[N]] <span class="sc">&gt;</span> <span class="dv">9</span>){</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        sudoku[empty[N]] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(check) {</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sudoku)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>solve_sudoku <span class="ot">&lt;-</span> <span class="cf">function</span>(sudoku) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  empty <span class="ot">=</span> <span class="fu">which</span>(sudoku <span class="sc">==</span> <span class="dv">0</span>) <span class="co"># obtain empty pos</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">=</span> <span class="fu">length</span>(empty) <span class="sc">+</span> <span class="dv">1</span>      <span class="co"># steps</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> <span class="dv">1</span>                      <span class="co"># Step</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (N <span class="sc">&lt;</span> S) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">=</span> <span class="fu">M_ind</span>(empty[N])      <span class="co"># row col index of empty pos</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="cn">TRUE</span>) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    sudoku[empty[N]] <span class="ot">=</span> sudoku[empty[N]] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    check <span class="ot">=</span> <span class="fu">is_valid</span>(<span class="at">X=</span>i[<span class="dv">1</span>],<span class="at">Y=</span>i[<span class="dv">2</span>],<span class="at">board=</span>sudoku,<span class="at">boxes =</span> boxes) </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(sudoku[empty[N]] <span class="sc">&gt;</span> <span class="dv">9</span>){</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        sudoku[empty[N]] <span class="ot">=</span> <span class="dv">0</span> <span class="co"># reset</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">-</span> <span class="dv">1</span>            <span class="co"># go back</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(check) {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span>           <span class="co"># proceed</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sudoku)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lets run it:</p>
 <div class="cell">
