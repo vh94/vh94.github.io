@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Valentin Haberl - R Programming</title>
+<title>VH - R Programming</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -135,7 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Valentin Haberl</span>
+    <span class="navbar-title">VH</span>
     </a>
   </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -170,18 +170,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#factorial" id="toc-factorial" class="nav-link" data-scroll-target="#factorial">Factorial</a></li>
   <li><a href="#combinations" id="toc-combinations" class="nav-link" data-scroll-target="#combinations">Combinations</a></li>
+  </ul></li>
   <li><a href="#sudoku" id="toc-sudoku" class="nav-link" data-scroll-target="#sudoku">Sudoku</a>
   <ul class="collapse">
   <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
   <li><a href="#logic" id="toc-logic" class="nav-link" data-scroll-target="#logic">Logic</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  </ul></li>
+  <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing">Testing</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content page-columns page-full column-body" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -258,8 +258,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tbody>
 </table>
 </section>
-<section id="sudoku" class="level2">
-<h2 class="anchored" data-anchor-id="sudoku">Sudoku</h2>
+</section>
+<section id="sudoku" class="level1 page-columns page-full">
+<h1>Sudoku</h1>
+<div class="cell">
+
+</div>
 <p>A bruteforce solution I did to train a little bit on my programming.</p>
 <section id="helper-functions" class="level3">
 <h3 class="anchored" data-anchor-id="helper-functions">Helper functions</h3>
@@ -310,7 +314,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">=</span> <span class="fu">length</span>(empty) <span class="sc">+</span> <span class="dv">1</span>      <span class="co"># steps</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> <span class="dv">1</span>                      <span class="co"># Step</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (N <span class="sc">&lt;</span> S) {</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">=</span> <span class="fu">M_ind</span>(empty[N])      <span class="co"># row col index of empty pos</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">=</span> <span class="fu">M_ind</span>(empty[N])      <span class="co"># row; col index of empty pos</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="cn">TRUE</span>) {</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    sudoku[empty[N]] <span class="ot">=</span> sudoku[empty[N]] <span class="sc">+</span> <span class="dv">1</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    check <span class="ot">=</span> <span class="fu">is_valid</span>(<span class="at">X=</span>i[<span class="dv">1</span>],<span class="at">Y=</span>i[<span class="dv">2</span>],<span class="at">board=</span>sudoku,<span class="at">boxes =</span> boxes) </span>
@@ -319,7 +323,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">-</span> <span class="dv">1</span>            <span class="co"># go back</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(check) {</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(check) {</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span>           <span class="co"># proceed</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      }</span>
@@ -328,66 +332,697 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sudoku)</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Lets run it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sudoku <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">data=</span><span class="fu">c</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">6</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">9</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">6</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">4</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,<span class="dv">6</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">9</span>,<span class="dv">0</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">6</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">5</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">9</span>), <span class="at">nrow=</span><span class="dv">9</span>, <span class="at">ncol=</span><span class="dv">9</span>, <span class="at">byrow=</span><span class="cn">FALSE</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)<span class="co"># i borrowed this sudoku example from Rbloggers </span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>solution <span class="ot">&lt;-</span> <span class="fu">solve_sudoku</span>(<span class="at">sudoku =</span> sudoku)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>solution</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
- [1,]    6    5    2    7    3    8    9    4    1
- [2,]    4    7    1    9    6    5    2    3    8
- [3,]    8    9    3    2    1    4    5    7    6
- [4,]    2    4    9    3    8    1    7    6    5
- [5,]    1    8    7    6    5    2    3    9    4
- [6,]    5    3    6    4    7    9    8    1    2
- [7,]    9    6    8    5    4    7    1    2    3
- [8,]    3    2    5    1    9    6    4    8    7
- [9,]    7    1    4    8    2    3    6    5    9</code></pre>
-</div>
+
 </div>
 </section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<section id="testing" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="testing">Testing</h2>
+<p>Lets test the implementation on three example sudoku with increasing difficulty</p>
+<div class="cell column-page quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">4</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">6</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">2</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;"></td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">9</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">7</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The left one is rather easy, the middle one medium and the right one is made by the Finnish Mathematician Inkala and is very hard to solve.</p>
+<p>Lets run it:</p>
+<div class="cell column-page quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">7</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">4</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">8</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">3</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">6</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">7</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">2</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">5</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">9</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">3</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+
+<table class="gmisc_table" style="border-collapse: collapse; border: 4px solid black; width: 300px; height: 300px; text-align: center;">
+<tbody> 
+<tr><td colspan="9" style="border-top: 2px solid grey; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+</tr> 
+<tr><td colspan="9" style="border-top: 3px solid black; border-bottom: 0px solid black;"> </td></tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">5</td>
+<td style="border: 1px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">9</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; text-align: center;">9</td>
+<td style="border: 1px solid black; text-align: center;">8</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">4</td>
+<td style="border: 1px solid black; text-align: center;">7</td>
+<td style="border: 1px solid black; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">1</td>
+<td style="border: 1px solid black; text-align: center;">2</td>
+<td style="border: 1px solid black; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; text-align: center;">5</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">5</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">2</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">1</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">8</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">3</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">9</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">7</td>
+<td style="border: 1px solid black; border-bottom: 2px solid grey; text-align: center;">6</td>
+<td style="border: 1px solid black; border-right: 3px solid black; border-bottom: 2px solid grey; text-align: center;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>we get the solution to all three lvls of sudoku!</p>
+<p>How long did this approach take to come up with the solutions?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># boxes </span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">list</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>),\(i){<span class="fu">sum</span>(solution[boxes<span class="sc">==</span>i])})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(easy),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(medium),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(Inkala),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 45 45 45 45 45 45 45 45 45</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rows n cols</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rowSums</span>(solution);<span class="fu">colSums</span>(solution)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 45 45 45 45 45 45 45 45 45</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 45 45 45 45 45 45 45 45 45</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># total</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">9</span>))<span class="sc">==</span><span class="fu">sum</span>(solution)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
+<pre><code>Unit: milliseconds
+                 expr        min         lq       mean     median         uq        max neval
+   solve_sudoku(easy)   86.80257   86.80257   86.80257   86.80257   86.80257   86.80257     1
+ solve_sudoku(medium)  262.13673  262.13673  262.13673  262.13673  262.13673  262.13673     1
+ solve_sudoku(Inkala) 5674.46073 5674.46073 5674.46073 5674.46073 5674.46073 5674.46073     1</code></pre>
 </div>
 </div>
 <p>Thats it!</p>
 
 
-</section>
 </section>
 </section>
 
