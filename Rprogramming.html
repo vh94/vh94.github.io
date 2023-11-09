@@ -122,7 +122,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -152,8 +151,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">Bioinformatics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./shinylive.html">
- <span class="menu-text">Conway’s Game of (Shiny) live</span></a>
+    <a class="nav-link" href="./conway.html">
+ <span class="menu-text">Conway’s Game of live</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html">
@@ -174,12 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#basics" id="toc-basics" class="nav-link active" data-scroll-target="#basics">Basics</a>
-  <ul class="collapse">
-  <li><a href="#factorial" id="toc-factorial" class="nav-link" data-scroll-target="#factorial">Factorial</a></li>
-  <li><a href="#combinations" id="toc-combinations" class="nav-link" data-scroll-target="#combinations">Combinations</a></li>
-  </ul></li>
-  <li><a href="#sudoku" id="toc-sudoku" class="nav-link" data-scroll-target="#sudoku">Sudoku</a>
+  <li><a href="#sudoku" id="toc-sudoku" class="nav-link active" data-scroll-target="#sudoku">Sudoku</a>
   <ul class="collapse">
   <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
   <li><a href="#logic" id="toc-logic" class="nav-link" data-scroll-target="#logic">Logic</a></li>
@@ -208,137 +202,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="basics" class="level1">
-<h1>Basics</h1>
-<section id="factorial" class="level2">
-<h2 class="anchored" data-anchor-id="factorial">Factorial</h2>
-<p>The factorial of a non-negative integer <span class="math inline">\(n\)</span> , denoted by <span class="math inline">\(n!\)</span>, is the product of all positive integers less than or equal to <span class="math inline">\(n\)</span>.</p>
-<p><span class="math display">\[n! = \prod^{n}_{i=1}{i.}\]</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>recursiveFactorial <span class="ot">&lt;-</span><span class="fu">Vectorize</span>( </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(n) {</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(n<span class="sc">==</span><span class="dv">0</span>,<span class="dv">1</span>,n<span class="sc">*</span><span class="fu">recursiveFactorial</span>(n<span class="dv">-1</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">"#fcfcfc"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">recursiveFactorial</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">plot</span>(<span class="at">type=</span><span class="st">"l"</span>,<span class="at">log=</span><span class="st">'y'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Rprogramming_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="combinations" class="level2">
-<h2 class="anchored" data-anchor-id="combinations">Combinations</h2>
-<p>There are <span class="math inline">\(n!\)</span> different ways of arranging <span class="math inline">\(n\)</span> distinct objects into a sequence</p>
-<p><span class="math display">\[\binom nk=\frac{n!}{k!(n-k)!} \quad \textrm{for}\quad  0 \le k \le n,\]</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bin  <span class="ot">&lt;-</span> <span class="cf">function</span>(n,k) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recursiveFactorial</span>(n)<span class="sc">/</span>(<span class="fu">recursiveFactorial</span>(k)<span class="sc">*</span><span class="fu">recursiveFactorial</span>(n<span class="sc">-</span>k))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>bases <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A"</span>,<span class="st">"T"</span>,<span class="st">"G"</span>,<span class="st">"C"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">bin</span>(<span class="fu">length</span>(bases),<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
-</div>
-</div>
-<table class="table">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">T</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">T</td>
-<td style="text-align: left;">T</td>
-<td style="text-align: left;">G</td>
-<td style="text-align: left;">G</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">G</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: left;">C</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
 <section id="sudoku" class="level1 page-columns page-full">
 <h1>Sudoku</h1>
 <div class="cell">
 
 </div>
-<p>A bruteforce solution I did to train a little bit on my programming.</p>
 <section id="helper-functions" class="level3">
 <h3 class="anchored" data-anchor-id="helper-functions">Helper functions</h3>
 <p><code>M_ind</code> converts between single matrix index and x,y indices</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert single index v_i to i,j </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>M_ind <span class="ot">&lt;-</span> <span class="cf">function</span>(v_i) {</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">=</span> <span class="dv">9</span> <span class="co"># dim of sudoku</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  i_m <span class="ot">=</span> <span class="fu">ifelse</span>(v_i<span class="sc">%%</span>i,v_i<span class="sc">%%</span>i,i)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(i_m,<span class="fu">ceiling</span>(v_i<span class="sc">/</span>i)))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert single index v_i to i,j </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>M_ind <span class="ot">&lt;-</span> <span class="cf">function</span>(v_i) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">=</span> <span class="dv">9</span> <span class="co"># dim of sudoku</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  i_m <span class="ot">=</span> <span class="fu">ifelse</span>(v_i<span class="sc">%%</span>i,v_i<span class="sc">%%</span>i,i)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(i_m,<span class="fu">ceiling</span>(v_i<span class="sc">/</span>i)))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I found this solution a while ago by answering a <code>stackoverflow</code> question.</p>
 <p>Getting the 3x3 “boxes” of the sudoku:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create boxes</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>boxes <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>,<span class="dv">7</span><span class="sc">:</span><span class="dv">9</span>),rep,<span class="dv">3</span>,<span class="at">each=</span><span class="dv">3</span>),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>,<span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create boxes</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>boxes <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>,<span class="dv">7</span><span class="sc">:</span><span class="dv">9</span>),rep,<span class="dv">3</span>,<span class="at">each=</span><span class="dv">3</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>,<span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>there might be a more elegant way, but this will do it for now…</p>
 </section>
 <section id="logic" class="level3">
 <h3 class="anchored" data-anchor-id="logic">Logic</h3>
 <p>Checking if the number at x,y is unique in its row, column and box.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>is_valid <span class="ot">&lt;-</span> <span class="cf">function</span>(X,Y,board,boxes) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  box   <span class="ot">&lt;-</span> boxes[X,Y] </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[X,],<span class="at">incomparables =</span> <span class="dv">0</span>))) {</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[,Y],<span class="at">incomparables =</span> <span class="dv">0</span>))) {</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[boxes<span class="sc">==</span>box],<span class="at">incomparables =</span> <span class="dv">0</span>))){</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  } </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>is_valid <span class="ot">&lt;-</span> <span class="cf">function</span>(X,Y,board,boxes) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  box   <span class="ot">&lt;-</span> boxes[X,Y] </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[X,],<span class="at">incomparables =</span> <span class="dv">0</span>))) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[,Y],<span class="at">incomparables =</span> <span class="dv">0</span>))) {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">duplicated</span>(board[boxes<span class="sc">==</span>box],<span class="at">incomparables =</span> <span class="dv">0</span>))){</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<blockquote class="blockquote">
-<p>using apply here would have made the whole thing even slower :(</p>
-</blockquote>
 <p>Now the depth first search algorithm.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>solve_sudoku <span class="ot">&lt;-</span> <span class="cf">function</span>(sudoku) {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  empty <span class="ot">=</span> <span class="fu">which</span>(sudoku <span class="sc">==</span> <span class="dv">0</span>) <span class="co"># obtain empty pos</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">=</span> <span class="fu">length</span>(empty) <span class="sc">+</span> <span class="dv">1</span>      <span class="co"># steps</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> <span class="dv">1</span>                      <span class="co"># Step</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (N <span class="sc">&lt;</span> S) {</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">=</span> <span class="fu">M_ind</span>(empty[N])      <span class="co"># row; col index of empty pos</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="cn">TRUE</span>) {</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    sudoku[empty[N]] <span class="ot">=</span> sudoku[empty[N]] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    check <span class="ot">=</span> <span class="fu">is_valid</span>(<span class="at">X=</span>i[<span class="dv">1</span>],<span class="at">Y=</span>i[<span class="dv">2</span>],<span class="at">board=</span>sudoku,<span class="at">boxes =</span> boxes) </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(sudoku[empty[N]] <span class="sc">&gt;</span> <span class="dv">9</span>){</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        sudoku[empty[N]] <span class="ot">=</span> <span class="dv">0</span> <span class="co"># reset</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">-</span> <span class="dv">1</span>            <span class="co"># go back</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(check) {</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span>           <span class="co"># proceed</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sudoku)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>solve_sudoku <span class="ot">&lt;-</span> <span class="cf">function</span>(sudoku) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  empty <span class="ot">=</span> <span class="fu">which</span>(sudoku <span class="sc">==</span> <span class="dv">0</span>) <span class="co"># obtain empty pos</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">=</span> <span class="fu">length</span>(empty) <span class="sc">+</span> <span class="dv">1</span>      <span class="co"># steps</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> <span class="dv">1</span>                      <span class="co"># Step</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (N <span class="sc">&lt;</span> S) {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">=</span> <span class="fu">M_ind</span>(empty[N])      <span class="co"># row; col index of empty pos</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="cn">TRUE</span>) {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    sudoku[empty[N]] <span class="ot">=</span> sudoku[empty[N]] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    check <span class="ot">=</span> <span class="fu">is_valid</span>(<span class="at">X=</span>i[<span class="dv">1</span>],<span class="at">Y=</span>i[<span class="dv">2</span>],<span class="at">board=</span>sudoku,<span class="at">boxes =</span> boxes) </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(sudoku[empty[N]] <span class="sc">&gt;</span> <span class="dv">9</span>){</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        sudoku[empty[N]] <span class="ot">=</span> <span class="dv">0</span> <span class="co"># reset</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">-</span> <span class="dv">1</span>            <span class="co"># go back</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(check) {</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span>           <span class="co"># proceed</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sudoku)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 
@@ -1014,18 +943,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>we get the solution to all three lvls of sudoku!</p>
 <p>How long did this approach take to come up with the solutions?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(easy),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(medium),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(Inkala),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(easy),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(medium),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_sudoku</span>(Inkala),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: milliseconds
                  expr        min         lq       mean     median         uq        max neval
-   solve_sudoku(easy)   47.66863   47.66863   47.66863   47.66863   47.66863   47.66863     1
- solve_sudoku(medium)  161.89212  161.89212  161.89212  161.89212  161.89212  161.89212     1
- solve_sudoku(Inkala) 2951.37732 2951.37732 2951.37732 2951.37732 2951.37732 2951.37732     1</code></pre>
+   solve_sudoku(easy)   48.09263   48.09263   48.09263   48.09263   48.09263   48.09263     1
+ solve_sudoku(medium)  157.14338  157.14338  157.14338  157.14338  157.14338  157.14338     1
+ solve_sudoku(Inkala) 2770.19387 2770.19387 2770.19387 2770.19387 2770.19387 2770.19387     1</code></pre>
 </div>
 </div>
 <p>Thats it!</p>

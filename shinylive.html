@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>VH - Conway’s Game of (Shiny) live</title>
+<title>VH - Conway’s Game of live</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -156,8 +156,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">Bioinformatics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./shinylive.html" aria-current="page">
- <span class="menu-text">Conway’s Game of (Shiny) live</span></a>
+    <a class="nav-link" href="./conway.html">
+ <span class="menu-text">Conway’s Game of live</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html">
@@ -179,7 +179,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#python-implementation" id="toc-python-implementation" class="nav-link active" data-scroll-target="#python-implementation">Python Implementation</a></li>
-  <li><a href="#shinylive-code" id="toc-shinylive-code" class="nav-link" data-scroll-target="#shinylive-code">Shinylive code</a></li>
   </ul>
 </nav>
     </div>
@@ -188,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Conway’s Game of (Shiny) live</h1>
+<h1 class="title">Conway’s Game of live</h1>
 </div>
 
 
@@ -206,13 +205,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 
 </div>
+<p><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conways game of life</a> is a basic cellular automata simulation. In this gridbased simulation the state of a cell, <em>dead</em> or <em>alive</em>, is defined by the number of its direct neigbors:</p>
 <pre class="shinylive-python" data-engine="python"><code>#| standalone: true
 #| viewerHeight: 700
 
 from shiny import *
-xdim=100
-ydim=30
-steps=500
+xdim=80
+ydim=25
+steps=100
 def create_grid(xdim,ydim):return( [[x]*xdim for x in [0]* ydim] )
 
 def neigbors(grid):
@@ -304,108 +304,118 @@ def server(input, output, session):
                           
 app = App(app_ui, server)
 </code></pre>
-<p><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conways game of life</a> is a basic cellular automata simulation. In this gridbased simulation the state of a cell, <em>dead</em> or <em>alive</em>, is defined by the number of its direct neigbors:</p>
+<p>Shinylive</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shinylive for Python facilitates the deveolpment of shinyapps using python, that</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># can be compiled for the browser using [Webassembly](https://de.wikipedia.org/wiki/WebAssembly).</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>app_ui <span class="op">=</span> ui.page_fluid(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ui.row(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ui.input_slider(<span class="st">"n"</span>, <span class="st">"Step"</span>, <span class="dv">0</span>, steps, <span class="dv">0</span>, animate<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    ui.input_select(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"id"</span>, <span class="st">"Creature"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      choices<span class="op">=</span>{<span class="st">"ggun"</span>:<span class="st">"Glidergun"</span>,<span class="st">"glider"</span>:<span class="st">"Glider"</span>,<span class="st">"blinker"</span>:<span class="st">"Blinker"</span>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      )  ),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    ui.row(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      ui.column(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="dv">12</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        ui.output_text_verbatim(<span class="st">"GOL"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                        </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.Calc</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> create_GOL():</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> main(xdim,ydim,steps,creature<span class="op">=</span><span class="bu">str</span>(<span class="bu">input</span>.<span class="bu">id</span>()))</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">@output</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">@render.text</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> GOL():</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> create_GOL()[<span class="bu">input</span>.n()]</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                          </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> App(app_ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="python-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="python-implementation">Python Implementation</h2>
 <p>The function <code>create_grid</code> returns a 2d array of specified dimensions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_grid(xdim,ydim):<span class="cf">return</span>( [[x]<span class="op">*</span>xdim <span class="cf">for</span> x <span class="kw">in</span> [<span class="dv">0</span>]<span class="op">*</span> ydim] )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_grid(xdim,ydim):<span class="cf">return</span>( [[x]<span class="op">*</span>xdim <span class="cf">for</span> x <span class="kw">in</span> [<span class="dv">0</span>]<span class="op">*</span> ydim] )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To count living cells in the neighbourhood of all cells the function <code>neighbors</code> creates an other grid that stores the counts for each cell in the grid.</p>
 <div class="cell">
-
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> neigbors(grid):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  neib <span class="op">=</span> create_grid(xdim,ydim)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ydim):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(xdim):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(i<span class="op">-</span><span class="dv">1</span>,i<span class="op">+</span><span class="dv">2</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(j<span class="op">-</span><span class="dv">1</span>,j<span class="op">+</span><span class="dv">2</span>):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>          neib[i][j] <span class="op">+=</span> grid[y<span class="op">%</span>ydim][x<span class="op">%</span>xdim]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      neib[i][j] <span class="op">=</span> neib[i][j]<span class="op">-</span>grid[i][j]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span>(neib)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>step</code> function iterates through the grid and gives birth or kills cells based oon their neigbourhood.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step(grid):</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  neibs <span class="op">=</span> neigbors(grid)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ydim):</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(xdim):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> neibs[i][j] <span class="kw">in</span> [<span class="dv">2</span>,<span class="dv">3</span>]:</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span>:</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> neibs[i][j] <span class="op">==</span> <span class="dv">3</span>:</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span>(grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step(grid):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  neibs <span class="op">=</span> neigbors(grid)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ydim):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(xdim):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> neibs[i][j] <span class="kw">in</span> [<span class="dv">2</span>,<span class="dv">3</span>]:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span>:</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> neibs[i][j] <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          grid[i][j] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span>(grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To populate our World the <code>populate</code> fuction adds living cells at defined locations in the grid, specified by an array of coordinate tuples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> populate(grid,coord_array):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    coord_range <span class="op">=</span> [(y, x) <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(ydim) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(xdim)] </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (y,x) <span class="kw">in</span> coord_range:</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (y,x) <span class="kw">in</span> coord_array:</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            grid[y][x]<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> populate(grid,coord_array):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    coord_range <span class="op">=</span> [(y, x) <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(ydim) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(xdim)] </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (y,x) <span class="kw">in</span> coord_range:</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (y,x) <span class="kw">in</span> coord_array:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            grid[y][x]<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The coord_array are stored in a dict called <code>creatures</code>:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>creatures <span class="op">=</span> {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"glider"</span> : [(<span class="dv">0</span>,<span class="dv">1</span>),(<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">2</span>,<span class="dv">0</span>),(<span class="dv">2</span>,<span class="dv">1</span>),(<span class="dv">2</span>,<span class="dv">2</span>),(<span class="dv">10</span>,<span class="dv">1</span>),(<span class="dv">11</span>,<span class="dv">2</span>),(<span class="dv">12</span>,<span class="dv">0</span>),(<span class="dv">12</span>,<span class="dv">1</span>),(<span class="dv">12</span>,<span class="dv">2</span>)],</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blinker"</span> : [(<span class="dv">10</span>,<span class="dv">10</span>),(<span class="dv">10</span>,<span class="dv">11</span>),(<span class="dv">10</span>,<span class="dv">12</span>)],</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggun"</span> :[(<span class="dv">5</span>,<span class="dv">1</span>),(<span class="dv">5</span>,<span class="dv">2</span>),(<span class="dv">6</span>,<span class="dv">1</span>),(<span class="dv">6</span>,<span class="dv">2</span>),(<span class="dv">5</span>,<span class="dv">11</span>),(<span class="dv">6</span>,<span class="dv">11</span>),(<span class="dv">7</span>,<span class="dv">11</span>),(<span class="dv">4</span>,<span class="dv">12</span>),(<span class="dv">8</span>,<span class="dv">12</span>),(<span class="dv">3</span>,<span class="dv">13</span>),(<span class="dv">9</span>,<span class="dv">13</span>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">3</span>,<span class="dv">14</span>),(<span class="dv">9</span>,<span class="dv">14</span>),(<span class="dv">6</span>,<span class="dv">15</span>),(<span class="dv">4</span>,<span class="dv">16</span>),(<span class="dv">8</span>,<span class="dv">16</span>),(<span class="dv">5</span>,<span class="dv">17</span>),(<span class="dv">6</span>,<span class="dv">17</span>),(<span class="dv">7</span>,<span class="dv">17</span>),(<span class="dv">6</span>,<span class="dv">18</span>),(<span class="dv">3</span>,<span class="dv">21</span>),(<span class="dv">4</span>,<span class="dv">21</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">5</span>,<span class="dv">21</span>),(<span class="dv">3</span>,<span class="dv">22</span>),(<span class="dv">4</span>,<span class="dv">22</span>),(<span class="dv">5</span>,<span class="dv">22</span>),(<span class="dv">2</span>,<span class="dv">23</span>),(<span class="dv">6</span>,<span class="dv">23</span>),(<span class="dv">2</span>,<span class="dv">25</span>),(<span class="dv">7</span>,<span class="dv">25</span>),(<span class="dv">1</span>,<span class="dv">25</span>),(<span class="dv">6</span>,<span class="dv">25</span>),(<span class="dv">3</span>,<span class="dv">35</span>),(<span class="dv">4</span>,<span class="dv">35</span>),(<span class="dv">3</span>,<span class="dv">36</span>),(<span class="dv">4</span>,<span class="dv">36</span>)]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>creatures <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"glider"</span> : [(<span class="dv">0</span>,<span class="dv">1</span>),(<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">2</span>,<span class="dv">0</span>),(<span class="dv">2</span>,<span class="dv">1</span>),(<span class="dv">2</span>,<span class="dv">2</span>),(<span class="dv">10</span>,<span class="dv">1</span>),(<span class="dv">11</span>,<span class="dv">2</span>),(<span class="dv">12</span>,<span class="dv">0</span>),(<span class="dv">12</span>,<span class="dv">1</span>),(<span class="dv">12</span>,<span class="dv">2</span>)],</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blinker"</span> : [(<span class="dv">10</span>,<span class="dv">10</span>),(<span class="dv">10</span>,<span class="dv">11</span>),(<span class="dv">10</span>,<span class="dv">12</span>)],</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggun"</span> :[(<span class="dv">5</span>,<span class="dv">1</span>),(<span class="dv">5</span>,<span class="dv">2</span>),(<span class="dv">6</span>,<span class="dv">1</span>),(<span class="dv">6</span>,<span class="dv">2</span>),(<span class="dv">5</span>,<span class="dv">11</span>),(<span class="dv">6</span>,<span class="dv">11</span>),(<span class="dv">7</span>,<span class="dv">11</span>),(<span class="dv">4</span>,<span class="dv">12</span>),(<span class="dv">8</span>,<span class="dv">12</span>),(<span class="dv">3</span>,<span class="dv">13</span>),(<span class="dv">9</span>,<span class="dv">13</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">3</span>,<span class="dv">14</span>),(<span class="dv">9</span>,<span class="dv">14</span>),(<span class="dv">6</span>,<span class="dv">15</span>),(<span class="dv">4</span>,<span class="dv">16</span>),(<span class="dv">8</span>,<span class="dv">16</span>),(<span class="dv">5</span>,<span class="dv">17</span>),(<span class="dv">6</span>,<span class="dv">17</span>),(<span class="dv">7</span>,<span class="dv">17</span>),(<span class="dv">6</span>,<span class="dv">18</span>),(<span class="dv">3</span>,<span class="dv">21</span>),(<span class="dv">4</span>,<span class="dv">21</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">5</span>,<span class="dv">21</span>),(<span class="dv">3</span>,<span class="dv">22</span>),(<span class="dv">4</span>,<span class="dv">22</span>),(<span class="dv">5</span>,<span class="dv">22</span>),(<span class="dv">2</span>,<span class="dv">23</span>),(<span class="dv">6</span>,<span class="dv">23</span>),(<span class="dv">2</span>,<span class="dv">25</span>),(<span class="dv">7</span>,<span class="dv">25</span>),(<span class="dv">1</span>,<span class="dv">25</span>),(<span class="dv">6</span>,<span class="dv">25</span>),(<span class="dv">3</span>,<span class="dv">35</span>),(<span class="dv">4</span>,<span class="dv">35</span>),(<span class="dv">3</span>,<span class="dv">36</span>),(<span class="dv">4</span>,<span class="dv">36</span>)]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>To obtain a quick visualisation of the world, the <code>Vis</code> function creates a string from the grid.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Vis(grid):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    vis <span class="op">=</span> <span class="bu">str</span>()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(ydim):</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(xdim):</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[y][x] <span class="op">==</span> <span class="dv">0</span>: vis <span class="op">+=</span> <span class="st">'░'</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>: vis <span class="op">+=</span> <span class="st">'█'</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        vis <span class="op">+=</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Vis(grid):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    vis <span class="op">=</span> <span class="bu">str</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(ydim):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(xdim):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[y][x] <span class="op">==</span> <span class="dv">0</span>: vis <span class="op">+=</span> <span class="st">'░'</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>: vis <span class="op">+=</span> <span class="st">'█'</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        vis <span class="op">+=</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally the <code>main</code> function runs the simualtion loop and returns the visualisation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main(xdim,ydim,steps,creature):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> create_grid(xdim,ydim)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    visus <span class="op">=</span> []</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    populate(grid,creatures[creature])</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,steps):</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        visus.append(Vis(step(grid)))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(visus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="shinylive-code" class="level2">
-<h2 class="anchored" data-anchor-id="shinylive-code">Shinylive code</h2>
-<p>Shinylive for Python facilitates the deveolpment of shinyapps using python, that can be compiled for the browser using <a href="https://de.wikipedia.org/wiki/WebAssembly">Webassembly</a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>app_ui <span class="op">=</span> ui.page_fluid(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ui.row(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ui.input_slider(<span class="st">"n"</span>, <span class="st">"Step"</span>, <span class="dv">0</span>, steps, <span class="dv">0</span>, animate<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    ui.input_select(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"id"</span>, <span class="st">"Creature"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      choices<span class="op">=</span>{<span class="st">"ggun"</span>:<span class="st">"Glidergun"</span>,<span class="st">"glider"</span>:<span class="st">"Glider"</span>,<span class="st">"blinker"</span>:<span class="st">"Blinker"</span>}</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      )  ),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    ui.row(</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      ui.column(</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">12</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        ui.output_text_verbatim(<span class="st">"GOL"</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                        </span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">@reactive.Calc</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> create_GOL():</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> main(xdim,ydim,steps,creature<span class="op">=</span><span class="bu">str</span>(<span class="bu">input</span>.<span class="bu">id</span>()))</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">@output</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">@render.text</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> GOL():</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> create_GOL()[<span class="bu">input</span>.n()]</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                          </span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> App(app_ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main(xdim,ydim,steps,creature):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> create_grid(xdim,ydim)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    visus <span class="op">=</span> []</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    populate(grid,creatures[creature])</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,steps):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        visus.append(Vis(step(grid)))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(visus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
