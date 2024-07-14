@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>VH - Numerical Differentiation</title>
+<title>VH - Numerical Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,11 +17,12 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -113,7 +84,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -122,14 +99,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
-<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
-<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -138,37 +143,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">VH</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./Rprogramming.html">
- <span class="menu-text">R Programming</span></a>
+    <a class="nav-link" href="./Rprogramming.html"> 
+<span class="menu-text">R Programming</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Bioinfo.html">
- <span class="menu-text">Bioinformatics</span></a>
+    <a class="nav-link" href="./Bioinfo.html"> 
+<span class="menu-text">Bioinformatics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./conway.html">
- <span class="menu-text">Conway’s Game of live</span></a>
+    <a class="nav-link" href="./conway.html"> 
+<span class="menu-text">Conway’s Game of live</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html">
- <span class="menu-text">About</span></a>
+    <a class="nav-link active" href="./NumericalMethods.html" aria-current="page"> 
+<span class="menu-text">Numerical Methods</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -181,12 +192,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#method-of-finite-differences" id="toc-method-of-finite-differences" class="nav-link active" data-scroll-target="#method-of-finite-differences">Method of finite differences</a>
+  <li><a href="#numerical-differentiation" id="toc-numerical-differentiation" class="nav-link active" data-scroll-target="#numerical-differentiation">Numerical differentiation</a>
+  <ul class="collapse">
+  <li><a href="#method-of-finite-differences" id="toc-method-of-finite-differences" class="nav-link" data-scroll-target="#method-of-finite-differences">Method of finite differences</a>
   <ul class="collapse">
   <li><a href="#primary-approximation-of-central-differencials" id="toc-primary-approximation-of-central-differencials" class="nav-link" data-scroll-target="#primary-approximation-of-central-differencials">Primary approximation of central differencials</a></li>
-  <li><a href="#second-deivative-of" id="toc-second-deivative-of" class="nav-link" data-scroll-target="#second-deivative-of">Second deivative of</a></li>
-  <li><a href="#determine-numericamente-o-integral" id="toc-determine-numericamente-o-integral" class="nav-link" data-scroll-target="#determine-numericamente-o-integral">7 Determine numericamente o integral</a></li>
+  <li><a href="#second-deivative-of-euler" id="toc-second-deivative-of-euler" class="nav-link" data-scroll-target="#second-deivative-of-euler">Second deivative of euler</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#numerical-integration" id="toc-numerical-integration" class="nav-link" data-scroll-target="#numerical-integration">Numerical Integration</a>
+  <ul class="collapse">
+  <li><a href="#trapezoidal-integration-method" id="toc-trapezoidal-integration-method" class="nav-link" data-scroll-target="#trapezoidal-integration-method">Trapezoidal integration method</a>
+  <ul class="collapse">
+  <li><a href="#simpsons-method" id="toc-simpsons-method" class="nav-link" data-scroll-target="#simpsons-method">Simpsons Method</a></li>
+  <li><a href="#check-how-fast-simpsons-and-the-triagle-method-converges" id="toc-check-how-fast-simpsons-and-the-triagle-method-converges" class="nav-link" data-scroll-target="#check-how-fast-simpsons-and-the-triagle-method-converges">Check how fast Simpsons and the triagle Method converges</a></li>
+  </ul></li>
+  <li><a href="#romberg-integration-method" id="toc-romberg-integration-method" class="nav-link" data-scroll-target="#romberg-integration-method">Romberg integration Method</a></li>
+  <li><a href="#gausslegendre-quadrature" id="toc-gausslegendre-quadrature" class="nav-link" data-scroll-target="#gausslegendre-quadrature">Gauss–Legendre quadrature</a></li>
+  <li><a href="#euler-derivation" id="toc-euler-derivation" class="nav-link" data-scroll-target="#euler-derivation">Euler Derivation</a>
+  <ul class="collapse">
+  <li><a href="#runge-kutta-4th" id="toc-runge-kutta-4th" class="nav-link" data-scroll-target="#runge-kutta-4th">runge kutta 4th</a></li>
+  </ul></li>
+  <li><a href="#shooting-method" id="toc-shooting-method" class="nav-link" data-scroll-target="#shooting-method">Shooting Method</a></li>
+  </ul></li>
+  <li><a href="#partial-differential-equations" id="toc-partial-differential-equations" class="nav-link" data-scroll-target="#partial-differential-equations">Partial differential equations</a></li>
   </ul>
 </nav>
     </div>
@@ -195,12 +224,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Numerical Differentiation</h1>
+<h1 class="title">Numerical Methods</h1>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -208,20 +237,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   
 
+
 </header>
 
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.ion()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="numerical-differentiation" class="level1">
+<h1>Numerical differentiation</h1>
+<p>While differentiation is easier for humans than Integration it is the other way around for computers. Since integration is basically summation, numerical differentiation builds upon small differnences</p>
 <section id="method-of-finite-differences" class="level2">
 <h2 class="anchored" data-anchor-id="method-of-finite-differences">Method of finite differences</h2>
-<p>As diferenças finitas são usadas em muitas técnicas numéricas. Por vezes não existe uma expressão para a função, apenas os seus valores numa grelha (ex.: dados experimentais, a continuar num próximo capítulo)</p>
-<p>Finite Differences are applied to many numerical techniques. For example if the expression for a function is unknown it can be approximated using …</p>
-<p>A ideia é usar a expansão em série de Taylor, para a frente e para trás, com passos de diferente dimensão, para obter a derivada da ordem pretendida (com menor ou maior precisão) Começa-se com, por exemplo:</p>
+<p>Finite differences are used in many numerical techniques. Sometimes there is no expression for the function, only its values on a grid. The idea is to use Taylor series expansion, backwards and forwards, with different step sizes, to obtain the derivative of the desired order (with less or more precision):</p>
 <p><span class="math display">\[
 f(x+h) = f(x) + hf'(x) + \frac{h^2}{2!}f''(x)+\frac{h³}{3!}f'''(x)+ …
 \]</span></p>
 <p><span class="math display">\[
-f(x+h) = \sum_{n=1}^{N} \frac{h^n}{n!}f^{n}(x) \\
-f(x-h) =  \sum_{n=2}^{N} \frac{h^n}{n!}f^n(x)- \frac{h^{n+1}}{(n+1)!}f^{n+1}(x) \\
-f(x+2h) = \sum_{n=0}^{N} \frac{2h^n}{2n!}f^n(x) \\
+f(x+h) = \sum_{n=1}^{N} \frac{h^n}{n!}f^{n}(x)
+\]</span></p>
+<p><span class="math display">\[
+f(x-h) =  \sum_{n=2}^{N} \frac{h^n}{n!}f^n(x)- \frac{h^{n+1}}{(n+1)!}f^{n+1}(x)
+\]</span> <span class="math display">\[
+f(x+2h) = \sum_{n=0}^{N} \frac{2h^n}{2n!}f^n(x)
+\]</span> <span class="math display">\[
 f(x-2h) = \sum_{n=2}^{N} \frac{2h^n}{n!}f^n(x)- \frac{2h^{n+1}}{(n+1)!}f^{n+1}(x) \\
 \]</span><br>
 </p>
@@ -229,129 +271,783 @@ f(x-2h) = \sum_{n=2}^{N} \frac{2h^n}{n!}f^n(x)- \frac{2h^{n+1}}{(n+1)!}f^{n+1}(x
 <h3 class="anchored" data-anchor-id="primary-approximation-of-central-differencials">Primary approximation of central differencials</h3>
 <p><span class="math display">\[
 f'(x) = \frac{f(x+h)-f(x-h)}{2h} +O(h²) \\
+\]</span></p>
+<p><span class="math display">\[
 f''(x) = \frac{f(x+h)-2f(x)+f(x-h)}{h²} + O(h^2) \\
+\]</span></p>
+<p><span class="math display">\[
 f'''(x) = \frac{f(x+2h)-2f(x+h)+2f(x-h)-f(x-2h)}{2h} +O(h²) \\
+\]</span></p>
+<p><span class="math display">\[
 f^{(4)}(x) = \frac{f(x+2h)-4f(x+h)+6f(x)-4f(x-h)+f(x-2h)}{h⁴} + O(h^2)  \\
+\]</span></p>
+<p><span class="math display">\[
 eq:\\
+\]</span></p>
+<p><span class="math display">\[
 h^4 f^{(4)}(x) +O(h^6)= f(x+2h)-4f(x+h)+6f(x)-4f(x-h)+f(x-2h)
 \]</span></p>
-<p>A soma e a subtração das expansões para a frente e para trás permitem eliminar alguns termos. São assim obtidas as diferentes derivadas, com uma precisão até certa ordemNo exemplo seguinte são eliminados os termos pares ou ímpares na ordem das derivadas</p>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : np.log2(x)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="kw">lambda</span> x : <span class="dv">1</span><span class="op">/</span>x</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dff <span class="op">=</span> <span class="kw">lambda</span> x : <span class="op">-</span><span class="dv">1</span><span class="op">/</span>x<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">1</span>,<span class="dv">60</span>,<span class="dv">60</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plt.plot(x,f(x),x,df(x),x,dff(x))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Function position as a function of time </span><span class="ch">\n</span><span class="st"> $pos =  log(time)$"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"time"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"position | speed | acceleration "</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="NumericalMethods_files/figure-html/cell-3-output-1.png" width="588" height="469"></p>
+<p>By adding and subtracting the forward and backward expansions, some terms can be eliminated. The different derivatives are thus obtained, with precision up to a certain order.</p>
+<p>In the following example, even or odd terms are eliminated in the order of the derivatives.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : np.log2(x)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="kw">lambda</span> x : <span class="dv">1</span><span class="op">/</span>x</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dff <span class="op">=</span> <span class="kw">lambda</span> x : <span class="op">-</span><span class="dv">1</span><span class="op">/</span>x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">1</span>,<span class="dv">60</span>,<span class="dv">60</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.close()</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.plot(x,f(x),x,df(x),x,dff(x))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Function position as a function of time </span><span class="ch">\n</span><span class="st"> $pos =  log(time)$"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"time"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"position | speed | acceleration "</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [(f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span>f(x))<span class="op">/</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> [(f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span>f(x<span class="op">-</span><span class="fl">0.5</span>))<span class="op">/</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>a4 <span class="op">=</span> [(<span class="op">-</span>f(x<span class="op">+</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span>)<span class="op">+</span><span class="dv">8</span><span class="op">*</span>f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span><span class="dv">8</span><span class="op">*</span>f(x<span class="op">-</span><span class="fl">0.5</span>)<span class="op">+</span>f(x<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span>))<span class="op">/</span><span class="dv">12</span><span class="op">*</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plt.plot(x,df(x),x,a,x,a2, x,a4)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"approximation of acceleration function df"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_111243/1142847347.py:1: RuntimeWarning: divide by zero encountered in log2
-  f = lambda x : np.log2(x)</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="NumericalMethods_files/figure-html/cell-4-output-2.png" width="571" height="431"></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [(f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span>f(x))<span class="op">/</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> [(f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span>f(x<span class="op">-</span><span class="fl">0.5</span>))<span class="op">/</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>a4 <span class="op">=</span> [(<span class="op">-</span>f(x<span class="op">+</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span>)<span class="op">+</span><span class="dv">8</span><span class="op">*</span>f(x<span class="op">+</span><span class="fl">0.5</span>)<span class="op">-</span><span class="dv">8</span><span class="op">*</span>f(x<span class="op">-</span><span class="fl">0.5</span>)<span class="op">+</span>f(x<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="fl">0.5</span>))<span class="op">/</span><span class="dv">12</span><span class="op">*</span><span class="fl">0.5</span> <span class="cf">for</span> x <span class="kw">in</span> x]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.close()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;string&gt;:1: RuntimeWarning: divide by zero encountered in log2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,df(x),x,a,x,a2, x,a4)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"approximation of acceleration function df"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/approximation acceleration-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x: np.sin(x)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>domain <span class="op">=</span> np.arange(<span class="dv">0</span>,<span class="dv">3</span><span class="op">*</span>np.pi,<span class="fl">0.01</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>N_inter <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> (<span class="bu">max</span>(domain)<span class="op">-</span><span class="bu">min</span>(domain)) <span class="op">/</span> N_inter</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> [f(x) <span class="cf">for</span> x <span class="kw">in</span> domain]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># first derivative</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">## forwards</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>f1f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (<span class="op">-</span><span class="dv">3</span><span class="op">*</span>f(x[<span class="dv">0</span>])<span class="op">+</span><span class="dv">4</span><span class="op">*</span>f(x[<span class="dv">1</span>])<span class="op">-</span>f(x[<span class="dv">2</span>])) <span class="op">/</span> <span class="dv">2</span><span class="op">*</span>h </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">## backwards</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>f1b <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (<span class="op">-</span><span class="dv">3</span><span class="op">*</span>f(x[<span class="dv">0</span>])<span class="op">+</span><span class="dv">4</span><span class="op">*</span>f(x[<span class="op">-</span><span class="dv">1</span>])<span class="op">-</span>f(x[<span class="op">-</span><span class="dv">2</span>])) <span class="op">/</span> <span class="dv">2</span><span class="op">*</span>h </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># second Derivative forward</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>f2f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (f(x[<span class="dv">0</span>])<span class="op">-</span><span class="dv">2</span><span class="op">*</span>f(x[<span class="dv">1</span>])<span class="op">+</span>f(x[<span class="dv">2</span>])) <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># second Derivative backward</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>f2f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (f(x[<span class="dv">0</span>])<span class="op">-</span><span class="dv">2</span><span class="op">*</span>f(x[<span class="dv">1</span>])<span class="op">+</span>f(x[<span class="dv">2</span>])) <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">## forwards</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>f1f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (<span class="op">-</span><span class="dv">3</span><span class="op">*</span>f(x)<span class="op">+</span><span class="dv">4</span><span class="op">*</span>f(x<span class="op">+</span>h)<span class="op">-</span>f(x<span class="op">+</span><span class="dv">2</span><span class="op">*</span>h)) <span class="op">/</span> <span class="dv">2</span><span class="op">*</span>h </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">## backwards</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>f1b <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (<span class="op">-</span><span class="dv">3</span><span class="op">*</span>f(x[<span class="dv">0</span>])<span class="op">+</span><span class="dv">4</span><span class="op">*</span>f(x[<span class="op">-</span><span class="dv">1</span>])<span class="op">-</span>f(x[<span class="op">-</span><span class="dv">2</span>])) <span class="op">/</span> <span class="dv">2</span><span class="op">*</span>h </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># second Derivative forward</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>f2f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (f(x[<span class="dv">0</span>])<span class="op">-</span><span class="dv">2</span><span class="op">*</span>f(x[<span class="dv">1</span>])<span class="op">+</span>f(x[<span class="dv">2</span>])) <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># second Derivative backward</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>f2f <span class="op">=</span> <span class="kw">lambda</span> f,x,h : (f(x[<span class="dv">0</span>])<span class="op">-</span><span class="dv">2</span><span class="op">*</span>f(x[<span class="dv">1</span>])<span class="op">+</span>f(x[<span class="dv">2</span>])) <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.009999833334166664, 0.01999866669333308, 0.02999550020249566, 0.03998933418663416, 0.04997916927067833, 0.059964006479444595, 0.06994284733753277, 0.0799146939691727, 0.08987854919801104, 0.09983341664682815, 0.10977830083717481, 0.11971220728891936, 0.12963414261969486, 0.1395431146442365, 0.14943813247359922, 0.15931820661424598, 0.16918234906699603, 0.17902957342582418, 0.18885889497650057, 0.19866933079506122, 0.20845989984609956, 0.21822962308086932, 0.2279775235351884, 0.23770262642713458, 0.24740395925452294, 0.2570805518921551, 0.26673143668883115, 0.27635564856411376, 0.28595222510483553, 0.29552020666133955, 0.3050586364434435, 0.31456656061611776, 0.32404302839486837, 0.3334870921408144, 0.3428978074554514, 0.35227423327508994, 0.361615431964962, 0.3709204694129827, 0.3801884151231614, 0.3894183423086505, 0.39860932798442295, 0.40776045305957015, 0.41687080242921076, 0.4259394650659996, 0.43496553411123023, 0.4439481069655198, 0.45288628537906833, 0.4617791755414829, 0.470625888171158, 0.479425538604203, 0.4881772468829075, 0.49688013784373675, 0.5055333412048469, 0.5141359916531132, 0.5226872289306592, 0.5311861979208834, 0.5396320487339693, 0.5480239367918736, 0.5563610229127838, 0.5646424733950354, 0.5728674601004813, 0.5810351605373051, 0.5891447579422695, 0.5971954413623921, 0.6051864057360395, 0.6131168519734338, 0.6209859870365597, 0.6287930240184686, 0.636537182221968, 0.6442176872376911, 0.6518337710215366, 0.6593846719714731, 0.6668696350036979, 0.674287911628145, 0.6816387600233341, 0.6889214451105513, 0.6961352386273567, 0.7032794192004101, 0.7103532724176078, 0.7173560908995228, 0.7242871743701426, 0.7311458297268959, 0.7379313711099628, 0.7446431199708593, 0.7512804051402927, 0.757842562895277, 0.7643289370255051, 0.7707388788989693, 0.7770717475268238, 0.7833269096274834, 0.7895037396899505, 0.795601620036366, 0.8016199408837772, 0.8075581004051143, 0.8134155047893737, 0.8191915683009983, 0.8248857133384501, 0.8304973704919705, 0.8360259786005205, 0.8414709848078965, 0.8468318446180152, 0.852108021949363, 0.8572989891886034, 0.8624042272433384, 0.867423225594017, 0.8723554823449863, 0.8772005042746817, 0.8819578068849475, 0.8866269144494873, 0.8912073600614354, 0.8956986856800476, 0.9001004421765051, 0.904412189378826, 0.9086334961158833, 0.9127639402605211, 0.9168031087717669, 0.9207505977361357, 0.9246060124080203, 0.9283689672491666, 0.9320390859672263, 0.9356160015533859, 0.9390993563190676, 0.9424888019316975, 0.945783999449539, 0.9489846193555862, 0.9520903415905158, 0.9551008555846923, 0.9580158602892249, 0.9608350642060727, 0.963558185417193, 0.966184951612734, 0.9687151001182652, 0.9711483779210446, 0.9734845416953194, 0.9757233578266591, 0.9778646024353163, 0.9799080613986142, 0.9818535303723598, 0.9837008148112766, 0.9854497299884603, 0.9871001010138504, 0.9886517628517197, 0.9901045603371778, 0.9914583481916864, 0.9927129910375885, 0.9938683634116449, 0.9949243497775809, 0.99588084453764, 0.9967377520431434, 0.9974949866040544, 0.9981524724975481, 0.998710143975583, 0.999167945271476, 0.9995258306054791, 0.999783764189357, 0.9999417202299663, 0.9999996829318346, 0.9999576464987401, 0.9998156151342908, 0.9995736030415051, 0.9992316344213905, 0.998789743470524, 0.9982479743776325, 0.9976063813191737, 0.9968650284539189, 0.9960239899165367, 0.9950833498101802, 0.994043202198076, 0.9929036510941185, 0.9916648104524686, 0.990326804156158, 0.9888897660047015, 0.9873538397007164, 0.9857191788355535, 0.9839859468739369, 0.9821543171376185, 0.9802244727880455, 0.9781966068080447, 0.9760709219825242, 0.9738476308781951, 0.9715269558223153, 0.9691091288804563, 0.9665943918332975, 0.9639829961524481, 0.9612752029752999, 0.9584712830789142, 0.955571516852944, 0.9525761942715953, 0.9494856148646305, 0.9463000876874145, 0.9430199312900105, 0.9396454736853249, 0.9361770523163061, 0.9326150140222005, 0.9289597150038693, 0.9252115207881683, 0.9213708061913954, 0.9174379552818098, 0.9134133613412252, 0.9092974268256817, 0.9050905633252009, 0.9007931915226273, 0.8964057411515598, 0.8919286509533796, 0.8873623686333755, 0.8827073508159741, 0.8779640629990781, 0.8731329795075164, 0.8682145834456126, 0.8632093666488737, 0.8581178296348089, 0.8529404815528762, 0.8476778401335698, 0.8423304316366457, 0.8368987907984977, 0.8313834607786831, 0.825784993105608, 0.8201039476213742, 0.814340892425796, 0.8084964038195901, 0.8025710662467472, 0.7965654722360865, 0.7904802223420048, 0.7843159250844198, 0.7780731968879212, 0.7717526620201257, 0.7653549525292536, 0.7588807081809218, 0.7523305763941707, 0.74570521217672, 0.7390052780594708, 0.7322314440302514, 0.7253843874668195, 0.7184647930691263, 0.7114733527908443, 0.7044107657701763, 0.6972777382599378, 0.6900749835569364, 0.6828032219306397, 0.675463180551151, 0.668055593416491, 0.6605812012792007, 0.6530407515722648, 0.6454349983343707, 0.6377647021345036, 0.6300306299958922, 0.6222335553193047, 0.6143742578057118, 0.6064535233783147, 0.5984721441039565, 0.5904309181139127, 0.5823306495240819, 0.5741721483545723, 0.5659562304487028, 0.5576837173914166, 0.5493554364271266, 0.5409722203769886, 0.5325349075556212, 0.5240443416872761, 0.5155013718214642, 0.5069068522480534, 0.49826164241183857, 0.4895666068265995, 0.48082261498864826, 0.47203054128988264, 0.4631912649303452, 0.45430566983030646, 0.44537464454187115, 0.4363990821601263, 0.4273798802338298, 0.418317940675659, 0.4092141696720173, 0.4000694775924195, 0.3908847788984522, 0.38166099205233167, 0.3723990394250553, 0.3630998472041683, 0.3537643453011427, 0.34439346725839, 0.33498815015590466, 0.32554933451756, 0.3160779642170538, 0.30657498638352293, 0.2970413513068324, 0.2874780123425444, 0.2778859258165868, 0.2682660509296179, 0.25861934966111083, 0.24894678667315256, 0.23924932921398243, 0.2295279470212642, 0.21978361222511694, 0.21001729925089915, 0.20022998472177053, 0.19042264736102704, 0.18059626789423291, 0.17075182895114532, 0.16089031496745576, 0.15101271208634384, 0.1411200080598672, 0.1312131921501838, 0.12129325503062975, 0.11136118868664958, 0.10141798631660186, 0.09146464223243675, 0.08150215176026912, 0.07153151114084326, 0.06155371742991315, 0.05156976839853464, 0.04158066243329049, 0.031587398436453896, 0.02159097572609596, 0.011592393936158275, 0.0015926529164868282, -0.008407247367148618, -0.01840630693305381, -0.02840352588360379, -0.03839790450523538, -0.04838844336841415, -0.058374143427580086, -0.06835400612104778, -0.0783270334708653, -0.0882922281826076, -0.09824859374510868, -0.10819513453010837, -0.11813085589181781, -0.12805476426637968, -0.13796586727122728, -0.14786317380431852, -0.15774569414324865, -0.16761244004421832, -0.17746242484086058, -0.18729466354290317, -0.19710817293466984, -0.20690197167339977, -0.21667508038737962, -0.22642652177388314, -0.236155320696897, -0.24586050428463702, -0.2555411020268312, -0.26519614587177337, -0.274824670323124, -0.28442571253646254, -0.2939983124155676, -0.30354151270842933, -0.3130543591029702, -0.322535900322479, -0.3319851882207341, -0.34140127787682095, -0.35078322768961984, -0.36013009947196856, -0.3694409585444771, -0.37871487382899804, -0.3879509179417303, -0.3971481672859602, -0.4063057021444168, -0.41542260677124626, -0.4244979694835826, -0.43353088275271773, -0.44252044329485246, -0.45146575216142315, -0.4603659148289983, -0.46922004128872713, -0.47802724613534286, -0.48678664865569937, -0.4954973729168449, -0.5041585478536115, -0.5127693073557238, -0.5213287903544065, -0.5298361409084934, -0.5382905082900177, -0.5466910470692872, -0.5550369171994238, -0.56332728410037, -0.5715613187423437, -0.5797381977287431, -0.5878571033784827, -0.5959172238077642, -0.6039177530112606, -0.6118578909427193, -0.6197368435949633, -0.6275538230792936, -0.6353080477042756, -0.6429987420539088, -0.6506251370651673, -0.6581864701049049, -0.6656819850461192, -0.6731109323435617, -0.680472569108694, -0.6877661591839738, -0.694990973216472, -0.7021462887308054, -0.7092313902013861, -0.7162455691239705, -0.7231881240865121, -0.7300583608392995, -0.7368555923643834, -0.7435791389442746, -0.750228328229919, -0.7568024953079282, -0.7633009827670734, -0.7697231407640244, -0.7760683270883323, -0.7823359072266528, -0.788525254426195, -0.7946357497573974, -0.8006667821758177, -0.8066177485832405, -0.8124880538879843, -0.8182771110644103, -0.8239843412116258, -0.8296091736113709, -0.8351510457850935, -0.8406094035501945, -0.8459837010754465, -0.8512734009355745, -0.8564779741650012, -0.8615969003107405, -0.8666296674844443, -0.8715757724135882, -0.8764347204918014, -0.8812060258283253, -0.8858892112966027, -0.8904838085819885, -0.8949893582285835, -0.8994054096851777, -0.9037315213503057, -0.9079672606164054, -0.9121122039130803, -0.9161659367494549, -0.920128053755624, -0.9239981587231879, -0.9277758646448755, -0.9314607937532425, -0.9350525775584494, -0.9385508568851079, -0.941955281908201, -0.9452655121880633, -0.9484812167044256, -0.951602073889516, -0.9546277716602164, -0.9575580074492711, -0.9603924882355434, -0.9631309305733167, -0.9657730606206388, -0.9683186141667072, -0.9707673366582883, -0.9731189832251739, -0.9753733187046665, -0.977530117665097, -0.9795891644283669, -0.9815502530915156, -0.9834131875473108, -0.9851777815038595, -0.9868438585032365, -0.9884112519391306, -0.9898798050735039, -0.991249371052267, -0.9925198129199632, -0.9936910036334645, -0.9947628260746756, -0.9957351730622453, -0.9966079473622855, -0.9973810616980933, -0.9980544387588794, -0.9986280112074989, -0.9991017216871848, -0.999475522827284, -0.999749377247994, -0.9999232575641008, -0.999997146387718, -0.9999710363300245, -0.9998449300020044, -0.9996188400141854, -0.999292788975378, -0.9988668094904142, -0.9983409441568876, -0.9977152455608933, -0.9969897762717695, -0.9961646088358407, -0.9952398257691626, -0.9942155195492713, -0.9930917926059354, -0.9918687573109126, -0.9905465359667132, -0.9891252607943698, -0.9876050739202153, -0.9859861273616704, -0.9842685830120416, -0.9824526126243325, -0.9805383977940689, -0.9785261299411385, -0.9764160102906497, -0.9742082498528091, -0.9719030694018208, -0.9695006994538088, -0.967001380243766, -0.9644053617015305, -0.9617129034267934, -0.9589242746631385, -0.9560397542711181, -0.9530596307003675, -0.9499842019607608, -0.9468137755926089, -0.9435486686359066, -0.9401892075986283, -0.9367357284240789, -0.9331885764572976, -0.9295481064105251, -0.9258146823277321, -0.9219886775482162, -0.918070474669267, -0.914060465507907, -0.9099590510617106, -0.9057666414687044, -0.9014836559663548, -0.8971105228496424, -0.8926476794282346, -0.8880955719827542, -0.8834546557201531, -0.8787253947281899, -0.8739082619290224, -0.8690037390319161, -0.8640123164850744, -0.858934493426592, -0.8537707776345433, -0.8485216854762041, -0.8431877418564168, -0.8377694801650978, -0.8322674422239013, -0.8266821782320357, -0.821014246711247, -0.8152642144499634, -0.8094326564466194, -0.8035201558521553, -0.7975273039117042, -0.791454699905466, -0.7853029510887806, -0.7790726726314031, -0.7727644875559871, -0.7663790266757844, -0.759916928531561, -0.7533788393277465, -0.7467654128678123, -0.7400773104888944, -0.7333152009956565, -0.7264797605934131, -0.7195716728205075, -0.7125916284799615, -0.7055403255703919, -0.6984184692162135, -0.6912267715971264, -0.6839659518769007, -0.6766367361314569, -0.669239857276262, -0.6617760549930369, -0.6542460756557914, -0.6466506722561834, -0.6389906043282237, -0.6312666378723208, -0.6234795452786853, -0.6156301052500863, -0.6077191027239858, -0.5997473287940438, -0.5917155806310094, -0.5836246614030073, -0.5754753801952172, -0.5672685519289686, -0.5590049972802488, -0.5506855425976376, -0.5423110198196698, -0.5338822663916443, -0.5254001251818793, -0.5168654443974288, -0.5082790774992584, -0.49964188311690244, -0.49095472496260095, -0.48221847174493154, -0.47343399708193507, -0.46460217941375737, -0.4557239019148047, -0.44680005240543, -0.4378315232631469, -0.4288192113333959, -0.4197640178398589, -0.41066684829434086, -0.4015286124062146, -0.39235022399145386, -0.38313260088125134, -0.373876664830236, -0.3645833414243013, -0.35525355998804264, -0.34588825349182883, -0.3364883584585042, -0.32705481486974064, -0.31758856607203484, -0.3080905586823781, -0.2985617424935936, -0.2890030703793611, -0.27941549819892586, -0.26979998470151617, -0.26015749143046807, -0.2504889826270749, -0.2407954251341592, -0.23107778829939224, -0.22133704387835867, -0.21157416593738504, -0.2017901307561289, -0.19198591672995502, -0.18216250427209502, -0.17232087571561025, -0.1624620152151542, -0.15258690864856114, -0.14269654351825772, -0.13279190885251674, -0.12287399510655005, -0.11294379406346737, -0.10300229873509785, -0.0930505032626889, -0.0830894028174964, -0.07311999350126308, -0.06314327224661277, -0.053160236717356125, -0.04317188520872868, -0.03317921654755682, -0.02318322999237945, -0.013184925133521251, -0.0031853017931379904, 0.006814640074770176, 0.016813900484349713, 0.026811479517893238, 0.03680637742582692, 0.04679759472668989, 0.05678413230707805, 0.06676499152155635, 0.07673917429251892, 0.08670568321000133, 0.09666352163141724, 0.10661169378122355, 0.11654920485049364, 0.1264750610964027, 0.13638826994159764, 0.14628784007345494, 0.1561727815432119, 0.1660421058649572, 0.175894826114484, 0.18572995702797787, 0.19554651510054424, 0.2053435186845546, 0.21511998808781552, 0.2248749456715337, 0.2346074159480808, 0.24431642567853773, 0.2540010039700231, 0.2636601823727784, 0.27329299497701326, 0.28289847850949296, 0.2924756724298697, 0.30202361902673236, 0.3115413635133787, 0.32102795412328977, 0.3304824422053109, 0.3399038823185127, 0.3492913323267357, 0.35864385349280037, 0.36796051057238466, 0.3772403719075444, 0.38648250951987934, 0.3956859992033308, 0.4048499206165983, 0.413973357375178, 0.42305539714299684, 0.43209513172364716, 0.44109165715120235, 0.4500440737806176, 0.4589514863776903, 0.4678130042085843, 0.4766277411288995, 0.48539481567229026, 0.49411335113860816, 0.5027824756815727, 0.5114013223959524, 0.5199690294042587, 0.5284847399429308, 0.5369476024480118, 0.545356770640302, 0.5537114036099907, 0.562010665900743, 0.5702537275932467, 0.5784397643882001, 0.5865679576887464, 0.5946374946823286, 0.6026475684219723, 0.6105973779069791, 0.618486128163024, 0.6263130303216559, 0.6340773016991814, 0.6417781658749337, 0.6494148527689112, 0.6569865987187891, 0.664492646556282, 0.6719322456828621, 0.6793046521448148, 0.6866091287076385, 0.6938449449297637, 0.7010113772355987, 0.7081077089878838, 0.7151332305593578, 0.7220872394037184, 0.7289690401258765, 0.7357779445514936, 0.7425132717958018, 0.7491743483316894, 0.7557605080570543, 0.7622710923614112, 0.7687054501917558, 0.775062938117667, 0.78134292039565, 0.787544769032711, 0.7936678638491531, 0.7997115925405982, 0.8056753507392133, 0.8115585420741488, 0.8173605782311729, 0.8230808790115055, 0.8287188723898353, 0.8342739945715234, 0.8397456900489799, 0.8451334116572173, 0.8504366206285644, 0.8556547866465439, 0.8607873878989016, 0.8658339111297899, 0.8707938516910911, 0.8756667135928826, 0.8804520095530344, 0.8851492610459383, 0.8897579983503596, 0.8942777605964088, 0.8987080958116269, 0.9030485609661848, 0.907298722017184, 0.9114581539520613, 0.9155264408310896, 0.9195031758289707, 0.9233879612755189, 0.927180408695427, 0.9308801388471136, 0.934486781760646, 0.9379999767747389, 0.9414193725728183, 0.9447446272181541, 0.9479754081880525, 0.951111392407109, 0.9541522662795148, 0.9570977257204173, 0.9599474761863261, 0.9627012327045701, 0.9653587199017918, 0.9679196720314865, 0.970383833000575, 0.9727509563950137, 0.9750208055044363, 0.977193153345823, 0.9792677826862, 0.9812444860643621, 0.9831230658116188, 0.9849033340715608, 0.9865851128188459, 0.9881682338770004, 0.989652538935238, 0.9910378795642898, 0.9923241172312475, 0.9935111233134158, 0.9945987791111761, 0.9955869758598548, 0.9964756147406006, 0.9972646068902659, 0.9979538734102932, 0.998543345374605, 0.999032963836496, 0.9994226798345279, 0.999712454397426, 0.9999022585479752, 0.9999920733059188, 0.9999818896898556, 0.999871708718139, 0.9996615414087742, 0.999351408778317, 0.998941341839772, 0.9984313815994914, 0.9978215790530743, 0.997111995180267, 0.9963027009388656, 0.9953937772576199, 0.9943853150281404, 0.9932774150958098, 0.992070188249698, 0.9907637552114835, 0.9893582466233818, 0.9878538030350801, 0.9862505748896837, 0.9845487225086711, 0.9827484160758618, 0.9808498356203995, 0.9788531709987474, 0.9767586218757036, 0.974566397704435, 0.972276717705532, 0.9698898108450863, 0.9674059158117949, 0.9648252809930908, 0.9621481644503063, 0.9593748338928642, 0.9565055666515091, 0.9535406496505743, 0.9504803793792889, 0.94732506186213, 0.9440750126282197, 0.9407305566797731, 0.9372920284595976, 0.9337597718176507, 0.9301341399766526, 0.9264154954967662, 0.9226042102393402, 0.9187006653297247, 0.9147052511191576, 0.9106183671457304, 0.906440422094434, 0.9021718337562933, 0.8978130289865844, 0.893364443662152, 0.888826522637821, 0.8841997197019127, 0.8794844975308649, 0.8746813276429652, 0.869790690351199, 0.8648130747152218, 0.8597489784924482, 0.8545989080882804, 0.8493633785054673, 0.8440429132926041, 0.8386380444917783, 0.833149312585366, 0.827577266441984, 0.8219224632616022, 0.8161854685198283, 0.8103668559113548, 0.8044672072925937, 0.7984871126234903, 0.7924271699085284, 0.7862879851369292, 0.7800701722220543, 0.7737743529400123, 0.7674011568674873, 0.7609512213187744, 0.7544251912820534, 0.7478237193548898, 0.7411474656789752, 0.7343970978741133, 0.7275732909714597, 0.7206767273460168, 0.7137080966484024, 0.706668095735878, 0.699557428602668, 0.6923768063095604, 0.6851269469128006, 0.6778085753922868, 0.6704224235790722, 0.662969230082182, 0.6554497402147573, 0.6478647059195176, 0.6402148856935713, 0.6325010445125663, 0.6247239537541924, 0.6168843911210448, 0.6089831405628535, 0.6010209921980904, 0.5929987422349551, 0.5849171928917617, 0.5767771523167085, 0.5685794345070696, 0.5603248592277947, 0.5520142519295329, 0.5436484436660884, 0.5352282710113162, 0.5267545759754634, 0.5182282059209752, 0.5096500134777504, 0.5010208564578846, 0.49234159776988917, 0.4836131053324, 0.47483625198738716, 0.4660119154128711, 0.45714097803515424, 0.4482243269405849, 0.43926285378684055, 0.4302574547137687, 0.42120903025377215, 0.4121184852417566, 0.40298672872464775, 0.39381467387048763, 0.38460323787711825, 0.3753533418804611, 0.366065910862411, 0.3567418735583286, 0.34738216236417424, 0.3379877132432676, 0.32855946563269217, 0.3190983623493521, 0.3096053494956915, 0.30008137636508325, 0.2905273953469072, 0.2809443618313018, 0.27133323411363275, 0.2616949732986626, 0.252030543204441, 0.24234091026592378, 0.23262704343833002, 0.22288991410024592, 0.2131304959564945, 0.20334976494075557, 0.19354869911798017, 0.183728278586583, 0.17388948538043356, 0.1640333033706535, 0.15416071816723032, 0.14427271702045727, 0.1343702887222073, 0.1244544235070617, 0.11452611295327708, 0.10458634988363526, 0.09463612826616005, 0.08467644311472142, 0.07470829038953478, 0.06473266689756589, 0.05475057019284918, 0.04476299847674028, 0.03477095049808608, 0.024775425453357765, 0.014777422886730236]</code></pre>
 </div>
 </div>
 </section>
-<section id="second-deivative-of" class="level3">
-<h3 class="anchored" data-anchor-id="second-deivative-of">Second deivative of</h3>
-<p>$$ f(x) = e^{-x} ; &nbsp;&nbsp;x = 1 \ f’(x) = -e^{-x} \ f’’(x) = e^{-x}</p>
-<p>f’’(x)_{approx} = </p>
-<p>$$</p>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#f = lambda x : np.exp(-x)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#df = lambda x : -np.exp(x)</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#dfapp = lambda x : (f(x+h)-2*f(x)+f(x-h))/h**2 </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.close()</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.plot(x,dfapp)</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="determine-numericamente-o-integral" class="level3">
-<h3 class="anchored" data-anchor-id="determine-numericamente-o-integral">7 Determine numericamente o integral</h3>
+<section id="second-deivative-of-euler" class="level3">
+<h3 class="anchored" data-anchor-id="second-deivative-of-euler">Second deivative of euler</h3>
 <p><span class="math display">\[
-\int_{1}^{∞}\frac{1}{1+x^4}  dx
-\]</span> e compare o resultado obtido com o valor “exato” 0,24375. Ajuda: use a mudança de variável x3 = 1/t .</p>
+f(x) = e^{-x} &nbsp;\
+f'(x) = -e^{-x} \
+f''(x) = e^{-x}, …
+\]</span></p>
+</section>
+</section>
+</section>
+<section id="numerical-integration" class="level1">
+<h1>Numerical Integration</h1>
+<section id="trapezoidal-integration-method" class="level2">
+<h2 class="anchored" data-anchor-id="trapezoidal-integration-method">Trapezoidal integration method</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trapez(f,a,b,Ninterv):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  h <span class="op">=</span> (b<span class="op">-</span>a) <span class="op">/</span> Ninterv</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  s <span class="op">=</span> a</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  I <span class="op">=</span> (f(a)<span class="op">+</span>f(b))<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(Ninterv<span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    s <span class="op">+=</span> h</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    I <span class="op">+=</span> f(s)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> h<span class="op">*</span>I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><span class="math display">\[
+I_1=    \int_0^\pi \sin²(x)dx
+\]</span></p>
+<p>sine² of x: from 0 to <span class="math inline">\(\pi\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : np.sin(x)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>trapez(f,<span class="dv">0</span>,np.pi,<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.5707963267949103</code></pre>
+</div>
+</div>
+<section id="shiny--live" class="level4">
+<h4 class="anchored" data-anchor-id="shiny--live">Shiny- live</h4>
+<p>(gets compiled to WASM - has to be in separte env) <em>takes time to load</em></p>
 <pre class="shinylive-python" data-engine="python"><code>#| standalone: true
-#| eval: false
-#| viewerHeight: 420
+#| viewerHeight: 365
 
-from shiny import App, render, ui
-import numpy as np
+
+
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import numpy as np
+from shiny import App, render, ui
+
+def trapez(f,a,b,N_iter):
+  h = (b-a) / N_iter
+  s = a
+  I = (f(a)+f(b))/2
+  for i in range(N_iter-1):
+    s += h
+    I += f(s)
+  return h*I
+  
+def simpson(f,a,b,N_iter):
+  h = (b-a) / N_iter
+  I = f(a) + f(b)
+  x = a
+  for i in range(N_iter-1):
+    x += h
+    I += (2+2*((i+1)%2))*f(x)
+  I *= h/3
+  return I
+  
+f = lambda x : np.sin(x)**2
+
+
+
 
 app_ui = ui.page_fluid(
     ui.layout_sidebar(
         ui.panel_sidebar(
-            ui.input_slider("period", "Period", 0.5, 2, 1, step=0.5),
-            ui.input_slider("amplitude", "Amplitude", 0, 2, 1, step=0.25),
-            ui.input_slider("shift", "Phase shift", 0, 2, 0, step=0.1),
+            ui.input_slider("n", "Number of triangles", 0, 100, 20),
+      
+            ui.input_slider("I","Interval",
+                          -np.pi*2,np.pi*2,
+                          [-np.pi,np.pi],
+                          step=0.05),
+            ui.input_select("f", "select function",{
+              "lambda x: np.sqrt(1-x**2)": "sqrt(1-x**2)",
+              "lambda x : x**2":"x**2",
+              "lambda x : np.sin(x)**2": "sin(x)**2"
+              }),
         ),
         ui.panel_main(
-            ui.output_plot("plot"),
+            ui.output_plot("NumIntplot"),
+            ui.output_text("txt"),
         ),
     ),
 )
 
 
 def server(input, output, session):
+
     @output
-    @render.plot(alt="Sine function")
-    def plot():
-        t = np.arange(0.0, 4.0, 0.01)
-        s = input.amplitude() * np.sin(
-            (2 * np.pi / input.period()) * (t - input.shift() / 2)
-        )
-        fig, ax = plt.subplots()
-        ax.set_ylim([-2, 2])
-        ax.plot(t, s)
-        ax.grid()
+    @render.plot(alt="Numerical integration")
+    def NumIntplot():
+          a,b = input.I()
 
+          N_iter = input.n()
+          h = np.linspace(a,b,N_iter)
+          x = np.linspace(a,b,400)
+          f = eval(input.f())
+          tI = trapez(f,a,b,N_iter)
+          sI = simpson(f,a,b,N_iter)
+          
+          fig, ax = plt.subplots()
+          ax.plot(x,f(x))
+          ax.plot(h,f(h),drawstyle='steps-mid')
+          ax.scatter(h,f(h))
+          ax.fill_between(h,f(h), alpha=0.3,step="mid")
+          ax.text(-0.5, 0.035,f"Trapez: {tI:4.4f}\nSimpson: {sI:4.4f}")
 
-app = App(app_ui, server)</code></pre>
+app = App(app_ui, server)
+
+</code></pre>
+<p><span class="math display">\[
+I_2 = \int_{-1}^1 \sqrt{1-x²dx}
+\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" data-startfrom="148" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 147;"><span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a>viewof amount <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Amount"</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-1" data-nodetype="declaration">
-
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x: np.sqrt(<span class="dv">1</span><span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>trapez(f, <span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.5707437385010707</code></pre>
 </div>
 </div>
+<p><span class="math display">\[
+I_3 = \int_0^1 \int_0^1 \int_0^1 x²yz³ \ dxdydz
+\]</span></p>
+<p><span class="math display">\[
+I_3=\int_0^1 dx x² \int_0^1 dyy\int_0^1 dzz³
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use lambdas:</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x,y,z : x<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y <span class="op">*</span> z<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>trapez_value<span class="op">=</span>np.prod(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">list</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">map</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">lambda</span> I: trapez(I,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      [<span class="kw">lambda</span> x: f(x,<span class="dv">1</span>,<span class="dv">1</span>),<span class="kw">lambda</span> y : f(<span class="dv">1</span>,y,<span class="dv">1</span>),<span class="kw">lambda</span> z : f(<span class="dv">1</span>,<span class="dv">1</span>,z)]</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or split into integrals</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fx <span class="op">=</span> <span class="kw">lambda</span> x : x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>fy <span class="op">=</span> <span class="kw">lambda</span> y : y</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>fz <span class="op">=</span> <span class="kw">lambda</span> z : z<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>trapez(fx,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>) <span class="op">*</span> trapez(fy,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>) <span class="op">*</span> trapez(fz,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.041672916875000146</code></pre>
+</div>
+</div>
 </section>
+<section id="simpsons-method" class="level3">
+<h3 class="anchored" data-anchor-id="simpsons-method">Simpsons Method</h3>
+<p>of 1/3 ds</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simpson(f,a,b,N_iter):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  h <span class="op">=</span> (b<span class="op">-</span>a) <span class="op">/</span> N_iter</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  I <span class="op">=</span> f(a) <span class="op">+</span> f(b)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> a</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N_iter<span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+=</span> h</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    I <span class="op">+=</span> ( <span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>((i<span class="op">+</span><span class="dv">1</span>)<span class="op">%</span><span class="dv">2</span>)) <span class="op">*</span> f(x)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  I <span class="op">*=</span> h<span class="op">/</span><span class="dv">3</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>applied to ex 1:</p>
+<p><span class="math display">\[\int_{a}^bf_{in}(x)dx+\int_{b}^af_{ex}(x)dx\]</span> <span class="math display">\[
+f_{in}(x)=\alpha+\beta(1-e^{-\gamma x})\\
+f_{ex}(x) = a' +\beta'e^{\gamma'(x-x_0)}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># inspiration phase</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># α = −4; β = −2; γ = 15;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>fin <span class="op">=</span> <span class="kw">lambda</span> x :<span class="op">-</span><span class="dv">4</span><span class="op">-</span><span class="dv">2</span><span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>np.exp(<span class="op">-</span><span class="dv">15</span><span class="op">*</span>x))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># expiration phase:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># α′ = −4; β′ = −2; γ′ = 12; x0 = 0.6;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>fex <span class="op">=</span> <span class="kw">lambda</span> x: <span class="op">-</span><span class="dv">4</span><span class="op">-</span><span class="dv">2</span><span class="op">*</span>np.exp(<span class="dv">12</span><span class="op">*</span>(x<span class="op">-</span><span class="fl">0.6</span>))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># integrate over one cycle:</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span> b <span class="op">=</span> <span class="fl">0.6</span><span class="op">;</span> n_value <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> simpson(fin,a,b,n_value)<span class="op">+</span>simpson(fex,b,a,n_value)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'From Simpson integration with:</span><span class="ch">\n</span><span class="ss">a = </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss">, b = </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss">, and </span><span class="sc">{</span>n_value<span class="sc">}</span><span class="ss"> intervals::</span><span class="ch">\n</span><span class="ss">• Work per cycle:</span><span class="ch">\n</span><span class="ss"> ~ </span><span class="sc">{</span>wc<span class="sc">}</span><span class="ss"> J</span><span class="ch">\n</span><span class="ss">• Work per day:</span><span class="ch">\n</span><span class="ss"> ~ </span><span class="sc">{</span>wc<span class="op">*</span><span class="dv">15</span><span class="op">*</span><span class="dv">1440</span><span class="sc">}</span><span class="ss"> J'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>From Simpson integration with:
+a = 0.0, b = 0.6, and 50 intervals::
+• Work per cycle:
+ ~ -0.9001397142393341 J
+• Work per day:
+ ~ -19443.01782756962 J</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a range of N values (number of intervals)</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>N_values <span class="op">=</span> [<span class="dv">2</span><span class="op">**</span>n <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>)]  </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Store approximations for different N values:</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>approx <span class="op">=</span> []</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_value <span class="kw">in</span> N_values:</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    approximation <span class="op">=</span> simpson(fin,a,b,n_value)<span class="op">+</span>simpson(fex,b,a,n_value)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    approx.append(approximation) </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Relative errors (error ratio between consecutive approximations)</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>relative_errors <span class="op">=</span> [approx[i] <span class="op">/</span> approx[i <span class="op">-</span> <span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(approx))]</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Absoulte Errors</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>ABSerrors <span class="op">=</span> [<span class="op">-</span><span class="fl">0.900141</span><span class="op">-</span>approx[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(approx))]</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting error propagation</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>plt.plot(N_values[<span class="dv">1</span>:], relative_errors, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">'log'</span>)</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.yscale('log')</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Intervals (N)'</span>)</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Relative Error (Approximation Ratio)'</span>)</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Error Propagation in Simpson</span><span class="ch">\'</span><span class="st">s Rule'</span>)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-12-5.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>plt.plot(N_values, ABSerrors, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">'log'</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.yscale('log')</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Intervals (N)'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Absolute Error'</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-12-6.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>recreation of the breath cycle plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>P_in <span class="op">=</span> np.zeros(<span class="dv">1000</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>P_ex <span class="op">=</span> np.zeros(<span class="dv">1000</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> np.linspace(<span class="fl">0.0</span>,<span class="fl">0.6</span>,<span class="dv">1000</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i,x <span class="kw">in</span> <span class="bu">enumerate</span>(V):</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  P_in[i] <span class="op">=</span> fin(x)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  P_ex[i] <span class="op">=</span> fex(x)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>plt.clf()</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>plt.plot(V,P_in,V,P_ex)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-13-9.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>applied to the triple Integral</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>simpson(fx,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>) <span class="op">*</span> simpson(fy,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>) <span class="op">*</span> simpson(fz,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.04166666666666682</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x,y,z : x<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y <span class="op">*</span> z<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>simpson_value<span class="op">=</span>np.prod(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">list</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">map</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">lambda</span> I: simpson(I,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">100</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      [<span class="kw">lambda</span> x: f(x,<span class="dv">1</span>,<span class="dv">1</span>),<span class="kw">lambda</span> y : f(<span class="dv">1</span>,y,<span class="dv">1</span>),<span class="kw">lambda</span> z : f(<span class="dv">1</span>,<span class="dv">1</span>,z)]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Simpson : </span><span class="sc">{</span>simpson_value<span class="sc">:2.6f}</span><span class="ss"> </span><span class="ch">\n</span><span class="ss"> Trapez : </span><span class="sc">{</span>trapez_value<span class="sc">:2.6f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simpson : 0.041667 
+ Trapez : 0.041673</code></pre>
+</div>
+</div>
+</section>
+<section id="check-how-fast-simpsons-and-the-triagle-method-converges" class="level3">
+<h3 class="anchored" data-anchor-id="check-how-fast-simpsons-and-the-triagle-method-converges">Check how fast Simpsons and the triagle Method converges</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Number_of_iterations <span class="op">=</span> [ <span class="dv">2</span><span class="op">**</span>n <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">7</span>) ]</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : x<span class="op">**</span><span class="dv">2</span>  <span class="op">;</span> a <span class="op">=</span> <span class="dv">0</span> <span class="op">;</span> b <span class="op">=</span> <span class="dv">1</span> <span class="co"># true value I = 1/3 </span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> N <span class="kw">in</span> Number_of_iterations:</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  err_trap <span class="op">=</span> (trapez(f,a,b,N)<span class="op">-</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>))</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  err_simpson <span class="op">=</span>  (simpson(f,a,b,N) <span class="op">-</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>N<span class="sc">}</span><span class="ss"> iterations:</span><span class="ch">\n</span><span class="ss"> Trapez error </span><span class="sc">{</span>err_trap<span class="sc">:2.5f}</span><span class="ch">\n</span><span class="ss"> Simpson Error </span><span class="sc">{</span>err_simpson<span class="sc">:2.5f}</span><span class="ch">\n</span><span class="ss">---'</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 iterations:
+ Trapez error 0.16667
+ Simpson Error 0.00000
+---
+2 iterations:
+ Trapez error 0.04167
+ Simpson Error 0.00000
+---
+4 iterations:
+ Trapez error 0.01042
+ Simpson Error 0.00000
+---
+8 iterations:
+ Trapez error 0.00260
+ Simpson Error 0.00000
+---
+16 iterations:
+ Trapez error 0.00065
+ Simpson Error 0.00000
+---
+32 iterations:
+ Trapez error 0.00016
+ Simpson Error 0.00000
+---
+64 iterations:
+ Trapez error 0.00004
+ Simpson Error 0.00000
+---</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="romberg-integration-method" class="level2">
+<h2 class="anchored" data-anchor-id="romberg-integration-method">Romberg integration Method</h2>
+<p>Function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> romberg(f,a,b,k,method):</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> method <span class="kw">not</span> <span class="kw">in</span> [simpson,trapez]:</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"please define a valid method"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># init </span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  For trapezoidal</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimates it is necessary to change the powers 4^j → 4^(j−1)</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  q <span class="op">=</span> <span class="dv">0</span> <span class="cf">if</span> method <span class="op">==</span> simpson <span class="cf">else</span> <span class="dv">1</span>   <span class="co"># q flag for method</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  N_iter <span class="op">=</span> np.array([(<span class="dv">2</span><span class="op">**</span>_) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(k)]) <span class="co"># number of iterations</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  I <span class="op">=</span> np.array([method(f,a,b,_) <span class="cf">for</span> _ <span class="kw">in</span> N_iter]) <span class="co"># first column of Integration matrix</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  J <span class="op">=</span> np.zeros((k,k))</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  E <span class="op">=</span> np.zeros((k,k))</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  J[:,<span class="dv">0</span>] <span class="op">=</span> I</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  E[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,k):</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,i<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>      J[i,j] <span class="op">=</span> ((<span class="dv">4</span><span class="op">**</span>(j<span class="op">+</span>q))<span class="op">*</span>J[i,j<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> J[i<span class="op">-</span><span class="dv">1</span>,j<span class="op">-</span><span class="dv">1</span>]) <span class="op">/</span> ((<span class="dv">4</span><span class="op">**</span>(j<span class="op">+</span>q))<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>      E[i,j] <span class="op">=</span> (J[i,j] <span class="op">-</span> J[i<span class="op">-</span><span class="dv">1</span>,j]) <span class="op">/</span> (<span class="dv">4</span><span class="op">**</span>(j<span class="op">+</span><span class="dv">1</span><span class="op">+</span>q) <span class="op">-</span><span class="dv">1</span> )</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> J,E</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">10</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>J,E <span class="op">=</span> romberg(f,<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">5</span>,simpson)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(J)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[33666.66666667     0.             0.             0.
+      0.        ]
+ [25333.33333333 22555.55555556     0.             0.
+      0.        ]
+ [25333.33333333 25333.33333333 25518.51851852     0.
+      0.        ]
+ [25333.33333333 25333.33333333 25333.33333333 25330.39388595
+      0.        ]
+ [25333.33333333 25333.33333333 25333.33333333 25333.33333333
+  25333.34486058]]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(E)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 0.00000000e+00  0.00000000e+00  0.00000000e+00  0.00000000e+00
+   0.00000000e+00]
+ [ 0.00000000e+00  1.50370370e+03  0.00000000e+00  0.00000000e+00
+   0.00000000e+00]
+ [ 0.00000000e+00  1.85185185e+02  4.05055850e+02  0.00000000e+00
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -2.93944738e+00  9.93348780e+01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  0.00000000e+00  1.15272446e-02
+   2.47637780e+01]]</code></pre>
+</div>
+</div>
+</section>
+<section id="gausslegendre-quadrature" class="level2">
+<h2 class="anchored" data-anchor-id="gausslegendre-quadrature">Gauss–Legendre quadrature</h2>
+<p>Function of an integer approximationg pi</p>
+<p><span class="math display">\[
+\int_{-1}^{1} \frac{2}{1+x²}dx = \pi
+\]</span></p>
+<p>steps:</p>
+<ol type="1">
+<li>Interpolate Integral to [-1,1] by mapping / scaling</li>
+<li>choose N points</li>
+<li>lookup coefs -&gt; w,k</li>
+<li>compute function on those points `</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>WeightsandAbscissae <span class="op">=</span> {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>: {</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w"</span>: [<span class="fl">1.0</span>, <span class="fl">1.0</span>],</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="op">-</span><span class="fl">0.5773502691896257</span>, <span class="fl">0.5773502691896257</span>]</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>: {</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w"</span>: [<span class="fl">0.8888888888888888</span>, <span class="fl">0.5555555555555556</span>,<span class="fl">0.5555555555555556</span>],</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="fl">0.0</span>, <span class="op">-</span><span class="fl">0.7745966692414834</span>,<span class="fl">0.7745966692414834</span>]</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">4</span>: {</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w"</span>: [<span class="fl">0.6521451548625461</span>, <span class="fl">0.6521451548625461</span>,<span class="fl">0.3478548451374538</span>,<span class="fl">0.3478548451374538</span>],</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="op">-</span><span class="fl">0.3399810435848563</span>, <span class="fl">0.3399810435848563</span>,<span class="op">-</span><span class="fl">0.8611363115940526</span>,<span class="fl">0.8611363115940526</span>]</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>: {</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w"</span>: [<span class="fl">0.5688888888888889</span>, <span class="fl">0.4786286704993665</span>,<span class="fl">0.4786286704993665</span>,<span class="fl">0.2369268850561891</span>,<span class="fl">0.2369268850561891</span>],</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="fl">0.0</span>, <span class="op">-</span><span class="fl">0.5384693101056831</span>,<span class="fl">0.5384693101056831</span>,<span class="op">-</span><span class="fl">0.9061798459386640</span>,<span class="fl">0.9061798459386640</span>]</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="dv">6</span>: {</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w"</span>: [<span class="fl">0.3607615730481386</span>, <span class="fl">0.3607615730481386</span>,<span class="fl">0.4679139345726910</span>,<span class="fl">0.4679139345726910</span>,<span class="fl">0.1713244923791704</span>,<span class="fl">0.1713244923791704</span>],</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="fl">0.6612093864662645</span>, <span class="op">-</span><span class="fl">0.6612093864662645</span>,<span class="op">-</span><span class="fl">0.2386191860831969</span>,<span class="fl">0.2386191860831969</span>,<span class="op">-</span><span class="fl">0.9324695142031521</span>,<span class="fl">0.9324695142031521</span>]</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>WeightsandAbscissae[<span class="dv">2</span>][<span class="st">"w"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1.0, 1.0]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>WeightsandAbscissae[<span class="dv">2</span>][<span class="st">"x"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-0.5773502691896257, 0.5773502691896257]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Gaussq(f,a,b,N):</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># linear transformation</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="op">=</span> (b<span class="op">-</span>a)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  beta <span class="op">=</span> (a<span class="op">+</span>b)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># obtain w and x</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  w <span class="op">=</span> WeightsandAbscissae[N][<span class="st">"w"</span>]</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> WeightsandAbscissae[N][<span class="st">"x"</span>]</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># initialize I</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  I <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Applying the n n point Gaussian quadrature </span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N):</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    I <span class="op">+=</span> alpha <span class="op">*</span> w[i] <span class="op">*</span> f( (alpha<span class="op">*</span>x[i]<span class="op">+</span>beta) ) </span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : <span class="dv">2</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>x<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>Gaussq(f,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">6</span>)<span class="op">-</span> np.pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>-0.0001292389556466489</code></pre>
+</div>
+</div>
+<p>Brute Force itegration in two dimensions</p>
+<p>rectangle enclosing the circle</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x,y : <span class="dv">2</span><span class="op">*</span>((x<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>y<span class="op">*</span>np.exp(<span class="op">-</span><span class="fl">0.1</span><span class="op">*</span>((x<span class="op">-</span><span class="dv">1</span>))<span class="op">**</span><span class="dv">2</span><span class="op">+</span>y<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>(x<span class="op">-</span><span class="dv">2</span>)<span class="op">*</span>(y<span class="op">-</span><span class="dv">1</span>)))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span> bx<span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>ay <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> by <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> <span class="fl">0.01</span><span class="op">;</span> dy <span class="op">=</span> dx</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">0</span> </span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> np.arange(ax<span class="op">+</span>dx<span class="op">/</span><span class="dv">2</span>,bx,dx):</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> y <span class="kw">in</span> np.arange(ay<span class="op">+</span>dy<span class="op">/</span><span class="dv">2</span>,by,dy):</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>      I <span class="op">=</span> I <span class="op">+</span> f(x,y) <span class="op">*</span> dx <span class="op">*</span>dy</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The integral is </span><span class="sc">{</span>I<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The integral is 4836458.586055034</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x,y : <span class="dv">2</span><span class="op">*</span>((x<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>y<span class="op">*</span>np.exp(<span class="op">-</span><span class="fl">0.1</span><span class="op">*</span>((x<span class="op">-</span><span class="dv">1</span>))<span class="op">**</span><span class="dv">2</span><span class="op">+</span>y<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>(x<span class="op">-</span><span class="dv">2</span>)<span class="op">*</span>(y<span class="op">-</span><span class="dv">1</span>)))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span> bx<span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>ay <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> by <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> <span class="fl">0.01</span><span class="op">;</span> dy <span class="op">=</span> dx</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">0</span> </span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">10</span>,dx):</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> y <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">10</span>,dy):</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check domain</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> x<span class="op">**</span><span class="dv">2</span><span class="op">+</span>y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;=</span> <span class="dv">2</span><span class="op">**</span><span class="dv">2</span>:   </span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>        I <span class="op">=</span> I <span class="op">+</span> f(x,y) <span class="op">*</span> dx <span class="op">*</span>dy</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The integral is </span><span class="sc">{</span>I<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The integral is 12.002988414109822</code></pre>
+</div>
+</div>
+<p>poission integral</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x,y : np.exp(<span class="op">-</span>(x<span class="op">**</span><span class="dv">2</span><span class="op">+</span>y<span class="op">**</span><span class="dv">2</span>))    <span class="co"># possion integral</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>dy <span class="op">=</span> dx</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">0</span> </span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> np.arange(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>,dx):</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> y <span class="kw">in</span> np.arange(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>,dy):</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check domain</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> x<span class="op">**</span><span class="dv">2</span><span class="op">+</span>y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span> <span class="dv">3</span><span class="op">**</span><span class="dv">2</span>:   </span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>        I <span class="op">=</span> I <span class="op">+</span> f(x,y) <span class="op">*</span> dx <span class="op">*</span>dy</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The integral is </span><span class="sc">{</span>I<span class="sc">}</span><span class="ch">\n</span><span class="ss">Error: </span><span class="sc">{</span>I<span class="op">-</span>np<span class="sc">.</span>pi<span class="sc">}</span><span class="ss"> '</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The integral is 3.141204302200772
+Error: -0.0003883513890210466 </code></pre>
+</div>
+</div>
+</section>
+<section id="euler-derivation" class="level2">
+<h2 class="anchored" data-anchor-id="euler-derivation">Euler Derivation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eulerderiv(y0,f,t0,tf,N):</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (tf<span class="op">-</span>t0) <span class="op">/</span> N <span class="co"># define</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    t_vec <span class="op">=</span> [t0]</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    y_vec <span class="op">=</span> [y0]</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    f_vec <span class="op">=</span> [f(y0)]</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,N): <span class="co"># for each interval</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>        t_vec.append(t0 <span class="op">+</span> t<span class="op">*</span>h)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> []</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(y0)): <span class="co"># for each variable of f (ie len of y0)</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>            y.append(y_vec[t<span class="op">-</span><span class="dv">1</span>][j] <span class="op">+</span> f_vec[t<span class="op">-</span><span class="dv">1</span>][j]<span class="op">*</span>h)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>        y_vec.append(y)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>        f_vec.append(f(y_vec[t]))</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> t_vec, y_vec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eulernp(y0,f,a,b,N):</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># define interval size h:</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b<span class="op">-</span>a) <span class="op">/</span> N</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pre allocate Y vector dim = N x y0:</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> np.zeros((N,y0.shape[<span class="dv">0</span>]))<span class="op">;</span> Y[<span class="dv">0</span>] <span class="op">=</span> y0 <span class="co"># -&gt; set y0 to first pos in Y vec</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># differentiate using euler's method:</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,N):</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>         Y[t] <span class="op">=</span> Y[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> f(Y[t<span class="op">-</span><span class="dv">1</span>])<span class="op">*</span>h</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate timeframe directly:</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    dT <span class="op">=</span> np.linspace(a, b, N)</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dT, Y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section" class="level4">
+<h4 class="anchored" data-anchor-id="section"></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x : np.array([x[<span class="dv">1</span>], <span class="dv">0</span><span class="op">-</span>x[<span class="dv">0</span>]<span class="op">*</span><span class="dv">40</span><span class="op">**</span><span class="dv">2</span>])</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># phi = 0</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co">###</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> np.array([<span class="dv">5</span>,<span class="dv">0</span>])</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>dT, F <span class="op">=</span> eulernp(y0,f,t0,tf,N)</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>plt.plot(dT, [x[<span class="dv">0</span>]<span class="cf">for</span> x <span class="kw">in</span> F])</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-29-11.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="runge-kutta-4th" class="level3">
+<h3 class="anchored" data-anchor-id="runge-kutta-4th">runge kutta 4th</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rungekutta4(y0,f,a,b,N):</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b<span class="op">-</span>a) <span class="op">/</span> N <span class="co"># define interval size h</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> np.zeros((N,y0.shape[<span class="dv">0</span>]))</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    Y[<span class="dv">0</span>] <span class="op">=</span> y0</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> np.zeros((N,y0.shape[<span class="dv">0</span>]))</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    F[<span class="dv">0</span>] <span class="op">=</span> f(a,Y[<span class="dv">0</span>])</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N):</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        k1 <span class="op">=</span> h <span class="op">*</span> f(a <span class="op">+</span> (t<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span>h,         F[t<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>        k2 <span class="op">=</span> h <span class="op">*</span> f(a <span class="op">+</span> (t<span class="op">-</span><span class="dv">1</span><span class="op">+</span><span class="fl">0.5</span>)<span class="op">*</span>h,     F[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>k1)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>        k3 <span class="op">=</span> h <span class="op">*</span> f(a <span class="op">+</span> (t<span class="op">-</span><span class="dv">1</span><span class="op">+</span><span class="fl">0.5</span>)<span class="op">*</span>h,     F[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>k2)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>        k4 <span class="op">=</span> h <span class="op">*</span> f(a <span class="op">+</span> t<span class="op">*</span>h,             F[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> k3)</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>        F[t] <span class="op">=</span> F[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> (k1 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> k2 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> k3 <span class="op">+</span> k4) <span class="op">/</span> <span class="dv">6</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>        Y[t] <span class="op">=</span> F[t]</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>    dT <span class="op">=</span> np.linspace(a, b, N)</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dT, Y,F</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a><span class="co">### 4</span></span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a><span class="co"># The equation that describes the position of a harmonic oscillator is, ¨x + ω2x = 0,</span></span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a><span class="co"># where ω = 40 is the angular frequency of oscillation, (the frequency is f = ω2π ).</span></span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a><span class="co"># define function f with two arguments sice runge kutta needs a t argument</span></span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> t,x : np.array([x[<span class="dv">1</span>], <span class="dv">0</span><span class="op">-</span>x[<span class="dv">0</span>]<span class="op">*</span><span class="dv">40</span><span class="op">**</span><span class="dv">2</span>])</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> np.array([<span class="dv">5</span>,<span class="dv">0</span>])</span>
+<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>dT, Y,F <span class="op">=</span> rungekutta4(y0,f,t0,tf,N)</span>
+<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>plt.plot(dT,[x[<span class="dv">0</span>]<span class="cf">for</span> x <span class="kw">in</span> F],dT,[x[<span class="dv">0</span>]<span class="cf">for</span> x <span class="kw">in</span> Y])</span>
+<span id="cb53-42"><a href="#cb53-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-43"><a href="#cb53-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb53-44"><a href="#cb53-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-45"><a href="#cb53-45" aria-hidden="true" tabindex="-1"></a><span class="co">#### 5</span></span>
+<span id="cb53-46"><a href="#cb53-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-47"><a href="#cb53-47" aria-hidden="true" tabindex="-1"></a><span class="co"># The number of bacteria, N (t), present in a certain medium depends on the amount</span></span>
+<span id="cb53-48"><a href="#cb53-48" aria-hidden="true" tabindex="-1"></a><span class="co"># of nutrients available, g(t). These quantities vary with time according to the equa-</span></span>
+<span id="cb53-49"><a href="#cb53-49" aria-hidden="true" tabindex="-1"></a><span class="co"># tions</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NumericalMethods_files/figure-html/unnamed-chunk-30-13.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="shooting-method" class="level2">
+<h2 class="anchored" data-anchor-id="shooting-method">Shooting Method</h2>
+</section>
+</section>
+<section id="partial-differential-equations" class="level1">
+<h1>Partial differential equations</h1>
+
+
 </section>
 
 </main> <!-- /main -->
-<script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof amount = Inputs.range([0, 100], {label: \"Amount\", step: 1})\n"},{"methodName":"interpretQuiet","source":"shinyInput('amount')"}]}
-</script>
-<script type="module">
-window._ojs.paths.runtimeToDoc = "../..";
-window._ojs.paths.runtimeToRoot = "../..";
-window._ojs.paths.docToRoot = "";
-window._ojs.selfContained = false;
-window._ojs.runtime.interpretFromScriptTags();
-</script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -379,9 +1075,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -417,10 +1127,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -430,8 +1139,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -446,6 +1164,238 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -486,6 +1436,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
